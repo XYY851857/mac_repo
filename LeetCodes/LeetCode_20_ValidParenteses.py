@@ -22,3 +22,4 @@ if __name__ == '__main__':
     list = str(input("input: "))
     ans = algo(list)
     print(ans)
+
