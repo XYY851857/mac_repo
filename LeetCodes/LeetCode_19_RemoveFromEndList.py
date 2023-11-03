@@ -13,6 +13,8 @@ def algo1(data):
     return link_str
 
 
+
+
 def algo2(data):
     link_str = ''
     for num in data:
