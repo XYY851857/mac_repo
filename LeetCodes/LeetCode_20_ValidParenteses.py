@@ -5,9 +5,20 @@
 """
 
 
-def algo():
-    pass
+def algo(data):
+    dict = {"(": ")", "[": "}", "{": "}", "<": ">"}
+    stack = []
+
+    for char in data:
+        if char in dict.keys():
+            stack.append(char)
+        elif char in dict.values():
+            if not stack or dict[stack.pop()] != char:
+                return False
+    return len(stack) == 0
 
 
 if __name__ == '__main__':
-    print()
+    list = str(input("input: "))
+    ans = algo(list)
+    print(ans)
