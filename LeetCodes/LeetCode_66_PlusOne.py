@@ -27,3 +27,4 @@ if __name__ == "__main__":
     list1 = [9, 9, 9]
     ans = algo(list1)
     print(ans)
+
