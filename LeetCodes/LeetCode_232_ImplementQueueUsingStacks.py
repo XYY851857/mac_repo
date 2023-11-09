@@ -48,3 +48,4 @@ if __name__ == "__main__":
         item = my_queue.get_nowait()
     except queue.Empty:
         print('Queue Empty')
+
