@@ -80,3 +80,4 @@ if __name__ == '__main__':
         guess = input('輸入四位數字 ： ')
         if not game_chunk(guess, secret_num):
             break
+
