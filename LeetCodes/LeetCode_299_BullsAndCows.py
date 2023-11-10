@@ -20,7 +20,6 @@ def algo(guess, secret_num):
             count_a += 1
 
 
-
 if __name__ == '__main__':
     while True:
         secret_num = r.randint(1, 9999)
