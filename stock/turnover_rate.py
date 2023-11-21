@@ -24,7 +24,7 @@ def get(url):
     pattern = re.compile(r'javascript:Link2Stk(\'\d\')')
     tags = soup.find_all('tr')
     print('len(tags)', len(tags))
-    print(tags)
+    # print(tags)
     rows = []
     for tag in tags:
         row = []
@@ -68,3 +68,11 @@ if __name__ == "__main__":
     url = 'https://sjmain.esunsec.com.tw/z/zg/zg_BD_1_0.djhtm'
     data = get(url)
     print(data)
+"""
+待辦事項：
+data資料前2個去掉
+連動LINE Notify
+
+注意事項：
+抓資料測試OK
+"""
