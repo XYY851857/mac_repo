@@ -25,26 +25,28 @@ def get(url):
     tags = soup.find_all('tr')
     print('len(tags)', len(tags))
     # print(tags)
+    time = soup.find('div', class_="t11")
+    print(time)
     rows = []
     for tag in tags:
         row = []
 
-        rank = tag.find('td', class_='t3n0', id="oAddCheckbox")
+        rank = tag.find('td', class_='t3n0', id="oAddCheckbox")  # 排名
         if not rank:
             continue
         # row.append(rank.text)
-        row.append(clean_strip(rank.text.strip()))
+        # row.append(clean_strip(rank.text.strip()))
         # print(rank.text)
 
-        name = tag.find('td', class_="t3t1")
+        name = tag.find('td', class_="t3t1")  # 名稱
         row.append(clean_strip(name.text.strip()))
         # print(name.text)
 
-        price = tag.find('td', class_="t3n1")
+        price = tag.find('td', class_="t3n1")  # 價格
         row.append(clean_strip(price.text.strip()))
         # print(price.text)
 
-        vol_and_turnover_rate_tags = tag.find_all('td', class_="t3n1")
+        vol_and_turnover_rate_tags = tag.find_all('td', class_="t3n1")  #成交量及週轉率
 
         if len(vol_and_turnover_rate_tags) == 3:
             volume = clean_strip(vol_and_turnover_rate_tags[1].text.strip())
@@ -56,18 +58,33 @@ def get(url):
             # print(turnover_rate)
 
         rows.append(row)
-    return rows
+    return rows, time
 
 
-def notify():  # 未完成 =.='
+def trans_list(data):
+    new_data = data[2:12]
+    return new_data
+
+
+def notify(my_list, time):  # 未完成 =.='
+    new_list = trans_list(my_list)
     url = "https://notify-api.line.me/api/notify"
     token = "HLphngWSvoKdfrCdF3alRDOlvWBrLoZdlL2Ir54Fg5N"
+    headers = {"Authorization": "Bearer " + token}
+    message = '\n\n'.join([' '.join(row) for row in new_list])
+
+    # 使用 data 參數而不是 params
+    data = {"message": "\n資料時間:{}\n{}".format(time, message)}
+    resp = requests.post(url, headers=headers, data=data)
+    return resp
 
 
 if __name__ == "__main__":
     url = 'https://sjmain.esunsec.com.tw/z/zg/zg_BD_1_0.djhtm'
-    data = get(url)
-    print(data)
+    data, time = get(url)
+    resp = notify(data, time)
+    # print(data)
+    print(resp)
 """
 待辦事項：
 data資料前2個去掉
