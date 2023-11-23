@@ -26,7 +26,7 @@ def get(url):
     print('len(tags)', len(tags))
     # print(tags)
     time = soup.find('div', class_="t11")
-    print(time)
+    print(time.text)
     rows = []
     for tag in tags:
         row = []
@@ -74,7 +74,7 @@ def notify(my_list, time):  # 未完成 =.='
     message = '\n\n'.join([' '.join(row) for row in new_list])
 
     # 使用 data 參數而不是 params
-    data = {"message": "\n資料時間:{}\n{}".format(time, message)}
+    data = {"message": "\n資料{}\n{}".format(time.text, message)}
     resp = requests.post(url, headers=headers, data=data)
     return resp
 
