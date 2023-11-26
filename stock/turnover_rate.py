@@ -5,8 +5,6 @@ token : HLphngWSvoKdfrCdF3alRDOlvWBrLoZdlL2Ir54Fg5N
 # -*- coding: utf-8 -*-
 import requests
 from bs4 import BeautifulSoup
-import csv
-from datetime import datetime
 import re
 
 
@@ -73,7 +71,6 @@ def notify(my_list, time):  # 未完成 =.='
     headers = {"Authorization": "Bearer " + token}
     message = '\n\n'.join([' '.join(row) for row in new_list])
 
-    # 使用 data 參數而不是 params
     data = {"message": "\n資料{}\n{}".format(time.text, message)}
     resp = requests.post(url, headers=headers, data=data)
     return resp
@@ -85,11 +82,3 @@ if __name__ == "__main__":
     resp = notify(data, time)
     # print(data)
     print(resp)
-"""
-待辦事項：
-data資料前2個去掉
-連動LINE Notify
-
-注意事項：
-抓資料測試OK
-"""
