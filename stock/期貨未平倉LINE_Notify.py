@@ -5,6 +5,10 @@ token : "jn41HsUfAyRN3intXow0qL4LpjpoyNfIiQhXSJe8apM"
 # -*- coding: utf-8 -*-
 import requests
 from bs4 import BeautifulSoup
+from datetime import datetime
+
+def clean_strip(text):
+    return ''.join(text.split())
 
 
 def get(url):
@@ -14,13 +18,28 @@ def get(url):
 
     soup = BeautifulSoup(html.text, 'html.parser')
     # print(soup)
-    data = soup.find_all('td')
-    print(data)
+    num = soup.find_all('font', color='blue')
+    dealer = clean_strip(num[5].text)
+    investment_trust = clean_strip(num[11].text)
+    foreign_investment = clean_strip(num[17].text)
+    return dealer, investment_trust, foreign_investment
 
 
+def notify(dealer, investment_trust, foreign_investment, time):  # 未完成 =.='
+    url = "https://notify-api.line.me/api/notify"
+    token = "jn41HsUfAyRN3intXow0qL4LpjpoyNfIiQhXSJe8apM"
+    headers = {"Authorization": "Bearer " + token}
+    message = '\n資料{}\n外資{}\n投信{}\n自營商{}'.format(time, foreign_investment, investment_trust, dealer)
+
+    data = {"message": message}
+    resp = requests.post(url, headers=headers, data=data)
+    return resp
 
 
 if __name__ == "__main__":
-    url = "https://www.macromicro.me/charts/136/tw-future-stock"
+    url = "https://www.taifex.com.tw/cht/3/futContractsDate"
     token = "jn41HsUfAyRN3intXow0qL4LpjpoyNfIiQhXSJe8apM"
-    data = get(url)
+    time = datetime.now()
+    time = time.strftime("%Y/%m/%d")
+    dealer, investment_trust, foreign_investment = get(url)
+    resp = notify(dealer, investment_trust, foreign_investment, time)
