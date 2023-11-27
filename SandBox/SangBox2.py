@@ -1,17 +1,8 @@
-class Solution:
-    def __init__(self, s):
-        self.s = s
+price = 18
+value = 2000
+rate = 0.003
+day = 1
+fee = 0.2
 
-    def algo(self):
-        data = []
-        for i in range(len(self.s)):
-            for j in range(i + 1, len(self.s)):
-                if self.s[i] == self.s[j]:
-                    data.append(''.join(self.s[i: j + 1]))
-        return data
-
-if __name__ == "__main__":
-    s = 'snfoawneiofnaw'
-    solution_instance = Solution(s)
-    ans = solution_instance.algo()
-    print(ans)
+refund = (price * value * rate * (day / 365))*(1-fee)
+print(refund)
