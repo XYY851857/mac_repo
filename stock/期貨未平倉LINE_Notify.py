@@ -29,7 +29,7 @@ def notify(dealer, investment_trust, foreign_investment, time):
     url = "https://notify-api.line.me/api/notify"
     token = "jn41HsUfAyRN3intXow0qL4LpjpoyNfIiQhXSJe8apM"
     headers = {"Authorization": "Bearer " + token}
-    message = '\n資料{}\n外資{}\n投信{}\n自營商{}'.format(time, foreign_investment, investment_trust, dealer)
+    message = f'\n資料擷取時間：{time}\n外資{foreign_investment:.6}\n投信{investment_trust}\n自營商{dealer}'
 
     data = {"message": message}
     resp = requests.post(url, headers=headers, data=data)
@@ -39,7 +39,6 @@ def notify(dealer, investment_trust, foreign_investment, time):
 if __name__ == "__main__":
     url = "https://www.taifex.com.tw/cht/3/futContractsDate"
     token = "jn41HsUfAyRN3intXow0qL4LpjpoyNfIiQhXSJe8apM"
-    time = datetime.now()
-    time = time.strftime("%Y/%m/%d")
+    time = (datetime.now()).strftime("%Y/%m/%d")
     dealer, investment_trust, foreign_investment = get(url)
     resp = notify(dealer, investment_trust, foreign_investment, time)
