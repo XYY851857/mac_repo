@@ -25,7 +25,7 @@ def get(url):
     return dealer, investment_trust, foreign_investment
 
 
-def notify(dealer, investment_trust, foreign_investment, time):  # 未完成 =.='
+def notify(dealer, investment_trust, foreign_investment, time):
     url = "https://notify-api.line.me/api/notify"
     token = "jn41HsUfAyRN3intXow0qL4LpjpoyNfIiQhXSJe8apM"
     headers = {"Authorization": "Bearer " + token}
