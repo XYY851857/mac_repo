@@ -32,6 +32,8 @@ def get(url):
         rank = tag.find('td', class_='t3n0', id="oAddCheckbox")  # 排名
         if not rank:
             continue
+        # row.append(rank.text)
+        # row.append(clean_strip(rank.text.strip()))
         # print(rank.text)
 
         name = tag.find('td', class_="t3t1")  # 名稱
@@ -57,10 +59,15 @@ def get(url):
     return rows, time
 
 
+def trans_list(data):
+    new_data = data[2:12]
+    return new_data
+
+
 def notify(my_list, time):
-    new_list = [row[1:] for row in my_list[2:12]]
+    new_list = trans_list(my_list)
     url = "https://notify-api.line.me/api/notify"
-    token = "HLphngWSvoKdfrCdF3alRDOlvWBrLoZdlL2Ir54Fg5N"
+    token = "jn41HsUfAyRN3intXow0qL4LpjpoyNfIiQhXSJe8apM"
     headers = {"Authorization": "Bearer " + token}
     message = '\n\n'.join([' '.join(row) for row in new_list])
 
