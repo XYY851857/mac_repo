@@ -64,7 +64,7 @@ def trans_list(data):
     return new_data
 
 
-def notify(my_list, time):  # 未完成 =.='
+def notify(my_list, time):
     new_list = trans_list(my_list)
     url = "https://notify-api.line.me/api/notify"
     token = "HLphngWSvoKdfrCdF3alRDOlvWBrLoZdlL2Ir54Fg5N"
