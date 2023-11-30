@@ -513,18 +513,18 @@ class TickandBest5(Frame):
 
     def btnBest5_Click(self):
         try:
-            if(self.boxMarketNo.get() == "0 = 上市"):
+            if(self.boxMarketNo.get_price() == "0 = 上市"):
                 sMarketNo=0x00
-            elif(self.boxMarketNo.get() == "1 = 上櫃"):
+            elif(self.boxMarketNo.get_price() == "1 = 上櫃"):
                 sMarketNo=0x01
-            elif(self.boxMarketNo.get() == "2 = 期貨"):
+            elif(self.boxMarketNo.get_price() == "2 = 期貨"):
                 sMarketNo=0x02
-            elif(self.boxMarketNo.get() == "3 = 選擇權"):
+            elif(self.boxMarketNo.get_price() == "3 = 選擇權"):
                 sMarketNo=0x03
             else:
                 sMarketNo=0x04
             pStock = sk.SKBEST5()
-            m_nCode = skQ.SKQuoteLib_GetBest5LONG(sMarketNo,int(self.txtBest5.get()), pStock)
+            m_nCode = skQ.SKQuoteLib_GetBest5LONG(sMarketNo, int(self.txtBest5.get_price()), pStock)
             SendReturnMessage("Quote", m_nCode[1], "SKQuoteLib_GetBest5LONG",GlobalListInformation)
 
         except Exception as e:

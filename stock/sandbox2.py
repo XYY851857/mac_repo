@@ -38,8 +38,8 @@ for tag in tags:
     print(descripe.text)
 
     link = tag.find('a')
-    row.append(link.get('href'))
-    print(link.get('href'))
+    row.append(link.get_price('href'))
+    print(link.get_price('href'))
 
     time = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
     row.append(time)

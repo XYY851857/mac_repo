@@ -285,10 +285,10 @@ class StockStrategyDayTrade(Frame):
                 oOrder.nTakeProfitFlag = 1
                 if self.__TPPercnetradVar.get() == 0:
                     oOrder.nRDOTPPercent = 1
-                    oOrder.bstrTPPercnet = self.__dOrder['txtTPPercnet'].get()
+                    oOrder.bstrTPPercnet = self.__dOrder['txtTPPercnet'].get_price()
                 elif self.__TPPercnetradVar.get() == 3:
                     oOrder.nRDOTPPercent = 0
-                    oOrder.bstrTPTrigger = self.__dOrder['txtTPTrigger'].get()
+                    oOrder.bstrTPTrigger = self.__dOrder['txtTPTrigger'].get_price()
 
                 if self.__TPPriceradVar.get() == 0:
                     oOrder.nRDTPMarketPriceType = 2
@@ -303,10 +303,10 @@ class StockStrategyDayTrade(Frame):
                 oOrder.nStopLossFlag = 1
                 if self.__SLPercnetradVar.get() == 0:
                     oOrder.nRDOSLPercent = 1
-                    oOrder.bstrSLPerent = self.__dOrder['txtSLPercnet'].get()
+                    oOrder.bstrSLPerent = self.__dOrder['txtSLPercnet'].get_price()
                 elif self.__SLPercnetradVar.get() == 3:
                     oOrder.nRDOSLPercent = 0
-                    oOrder.bstrSLTrigger = self.__dOrder['txtSLTrigger'].get()
+                    oOrder.bstrSLTrigger = self.__dOrder['txtSLTrigger'].get_price()
 
                 if self.__SLPriceradVar.get() == 0:
                     oOrder.nRDSLMarketPriceType = 2

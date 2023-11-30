@@ -211,30 +211,30 @@ class Order(Frame):
 
     def __SendOrder_Click(self, bAsyncOrder):
         try:
-            if self.__dOrder['boxCallPut'].get() == "CALL":
+            if self.__dOrder['boxCallPut'].get_price() == "CALL":
                 sCallPut = 0
-            elif self.__dOrder['boxCallPut'].get() == "PUT":
+            elif self.__dOrder['boxCallPut'].get_price() == "PUT":
                 sCallPut = 1
 
-            if self.__dOrder['boxBuySell'].get() == "買進":
+            if self.__dOrder['boxBuySell'].get_price() == "買進":
                 sBuySell = 0
-            elif self.__dOrder['boxBuySell'].get() == "賣出":
+            elif self.__dOrder['boxBuySell'].get_price() == "賣出":
                 sBuySell = 1
 
-            if self.__dOrder['boxNewClose'].get() == "新倉":
+            if self.__dOrder['boxNewClose'].get_price() == "新倉":
                 sNewClose = 0
-            elif self.__dOrder['boxNewClose'].get() == "平倉":
+            elif self.__dOrder['boxNewClose'].get_price() == "平倉":
                 sNewClose = 1
 
-            if self.__dOrder['boxFlag'].get() == "非當沖":
+            if self.__dOrder['boxFlag'].get_price() == "非當沖":
                 sDayTrade = 0
-            elif self.__dOrder['boxFlag'].get() == "當沖":
+            elif self.__dOrder['boxFlag'].get_price() == "當沖":
                 sDayTrade = 1
 
-            if self.__dOrder['boxPeriod'].get() == "ROD":
+            if self.__dOrder['boxPeriod'].get_price() == "ROD":
                 sTradeType = 0
 
-            if self.__dOrder['boxSpecialTradeType'].get() == "LMT（限價）":
+            if self.__dOrder['boxSpecialTradeType'].get_price() == "LMT（限價）":
                 sSpecialTradeType = 0
 
             # 建立下單用的參數(OVERSEAFUTUREORDER)物件(下單時要填商品代號,買賣別,委託價,數量等等的一個物件)
@@ -242,21 +242,21 @@ class Order(Frame):
             # 填入完整帳號
             oOrder.bstrFullAccount =  self.__dOrder['boxAccount']
             # 填入交易所代號
-            oOrder.bstrExchangeNo = self.__dOrder['txtExchangeNo'] .get()
+            oOrder.bstrExchangeNo = self.__dOrder['txtExchangeNo'] .get_price()
             # 填入期權代號
-            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get()
+            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get_price()
             # 近月商品年月
-            oOrder.bstrYearMonth = self.__dOrder['txtYearMonth'].get()
+            oOrder.bstrYearMonth = self.__dOrder['txtYearMonth'].get_price()
             # 履約價
-            oOrder.bstrStrikePrice = self.__dOrder['txtStrikePrice'].get()
+            oOrder.bstrStrikePrice = self.__dOrder['txtStrikePrice'].get_price()
             # Call Put
             oOrder.sCallPut = sCallPut
             # 委託數量
-            oOrder.nQty = int(self.__dOrder['txtQty'].get())
+            oOrder.nQty = int(self.__dOrder['txtQty'].get_price())
             # 委託價
-            oOrder.bstrOrder = self.__dOrder['txtOrder'].get()
+            oOrder.bstrOrder = self.__dOrder['txtOrder'].get_price()
             # 委託價分子
-            oOrder.bstrOrderNumerator = self.__dOrder['txtOrderNumerator'].get()
+            oOrder.bstrOrderNumerator = self.__dOrder['txtOrderNumerator'].get_price()
             # 買賣別
             oOrder.sBuySell = sBuySell
             # 新倉、平倉
@@ -268,9 +268,9 @@ class Order(Frame):
             # LMT（限價）
             oOrder.sSpecialTradeType = sSpecialTradeType
             # 觸發價
-            oOrder.bstrTrigger = self.__dOrder['txtTrigger'].get()
+            oOrder.bstrTrigger = self.__dOrder['txtTrigger'].get_price()
             # 觸發價分子
-            oOrder.bstrTriggerNumerator = self.__dOrder['txtTriggerNumerator'].get()
+            oOrder.bstrTriggerNumerator = self.__dOrder['txtTriggerNumerator'].get_price()
 
             message, m_nCode = skO.SendOverSeaOptionOrder(Global.Global_IID, bAsyncOrder, oOrder)
             self.__oMsg.SendReturnMessage("Order", m_nCode, "SendOverSeaOptionOrder", self.__dOrder['listInformation'])

@@ -136,28 +136,28 @@ class Order(Frame):
 
     def __SendOrder_Click(self, bAsyncOrder):
         try:
-            if self.__dOrder['boxBuySell'].get() == "買進":
+            if self.__dOrder['boxBuySell'].get_price() == "買進":
                 sBuySell = 0
-            elif self.__dOrder['boxBuySell'].get() == "賣出":
+            elif self.__dOrder['boxBuySell'].get_price() == "賣出":
                 sBuySell = 1
 
-            if self.__dOrder['boxPeriod'].get() == "ROD":
+            if self.__dOrder['boxPeriod'].get_price() == "ROD":
                 sTradeType = 0
-            elif self.__dOrder['boxPeriod'].get() == "IOC":
+            elif self.__dOrder['boxPeriod'].get_price() == "IOC":
                 sTradeType = 1
-            elif self.__dOrder['boxPeriod'].get() == "FOK":
+            elif self.__dOrder['boxPeriod'].get_price() == "FOK":
                 sTradeType = 2
 
-            if self.__dOrder['boxNewClose'].get() == "新倉":
+            if self.__dOrder['boxNewClose'].get_price() == "新倉":
                 sNewClose = 0
-            elif self.__dOrder['boxNewClose'].get() == "平倉":
+            elif self.__dOrder['boxNewClose'].get_price() == "平倉":
                 sNewClose = 1
-            elif self.__dOrder['boxNewClose'].get() == "自動":
+            elif self.__dOrder['boxNewClose'].get_price() == "自動":
                 sNewClose = 2
 
-            if self.__dOrder['boxReserved'].get() == "盤中":
+            if self.__dOrder['boxReserved'].get_price() == "盤中":
                 sReserved = 0
-            elif self.__dOrder['boxReserved'].get() == "T盤預約":
+            elif self.__dOrder['boxReserved'].get_price() == "T盤預約":
                 sReserved = 1
 
             # 建立下單用的參數(FUTUREORDER)物件(下單時要填商品代號,買賣別,委託價,數量等等的一個物件)
@@ -165,15 +165,15 @@ class Order(Frame):
             # 填入完整帳號
             oOrder.bstrFullAccount =  self.__dOrder['boxAccount']
             # 填入期權代號
-            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get()
+            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get_price()
             # 買賣別
             oOrder.sBuySell = sBuySell
             # ROD、IOC、FOK
             oOrder.sTradeType = sTradeType
             # 委託價
-            oOrder.bstrPrice = self.__dOrder['txtPrice'].get()
+            oOrder.bstrPrice = self.__dOrder['txtPrice'].get_price()
             # 委託數量
-            oOrder.nQty = int(self.__dOrder['txtQty'].get())
+            oOrder.nQty = int(self.__dOrder['txtQty'].get_price())
             # 新倉、平倉、自動
             oOrder.sNewClose = sNewClose
             # 盤中、T盤預約
@@ -419,8 +419,8 @@ class CorrectPrice():
                 elif self.boxPeriod.get() == "FOK":
                     nTradeType = 2
 
-                message,m_nCode = skO.CorrectPriceBySeqNo(Global.Global_IID,bAsyncOrder,\
-                    self.__dOrder['boxAccount'],self.__dOrder['txtPriceSeqNo'].get(),self.txtCorrectPrice.get(),nTradeType)
+                message,m_nCode = skO.CorrectPriceBySeqNo(Global.Global_IID, bAsyncOrder, \
+                                                          self.__dOrder['boxAccount'], self.__dOrder['txtPriceSeqNo'].get_price(), self.txtCorrectPrice.get(), nTradeType)
                 self.__oMsg.SendReturnMessage("Order", m_nCode, "CorrectPriceBySeqNo", self.__dOrder['listInformation'])
                 if bAsyncOrder == False and m_nCode == 0:
                     strMsg = "選擇權改價: " + str(message)
@@ -435,8 +435,8 @@ class CorrectPrice():
                 elif self.boxPeriod.get() == "FOK":
                     nTradeType = 2
 
-                message,m_nCode = skO.CorrectPriceByBookNo(Global.Global_IID,bAsyncOrder,\
-                    self.__dOrder['boxAccount'],bstrMarketSymbol,self.__dOrder['txtPriceBookNo'].get(),self.txtCorrectPrice.get(),nTradeType)
+                message,m_nCode = skO.CorrectPriceByBookNo(Global.Global_IID, bAsyncOrder, \
+                                                           self.__dOrder['boxAccount'], bstrMarketSymbol, self.__dOrder['txtPriceBookNo'].get_price(), self.txtCorrectPrice.get(), nTradeType)
                 self.__oMsg.SendReturnMessage("Order", m_nCode, "CorrectPriceByBookNo", self.__dOrder['listInformation'])
                 if bAsyncOrder == False and m_nCode == 0:
                     strMsg = "選擇權改價: " + str(message)

@@ -152,10 +152,10 @@ class Order(Frame):
         if self.__dOrder['boxAccount'] == '':
             messagebox.showerror("error！", '請選擇複委託帳號！')
         else:
-            if self.__dOrder['boxASYNC'].get() == "同步":
+            if self.__dOrder['boxASYNC'].get_price() == "同步":
                 bAsyncOrder = 0
                 self.__SendOrder_Click(False)
-            elif self.__dOrder['boxASYNC'].get() == "非同步":
+            elif self.__dOrder['boxASYNC'].get_price() == "非同步":
                 bAsyncOrder = 1
                 self.__SendOrder_Click(True)
             
@@ -165,17 +165,17 @@ class Order(Frame):
 
     def __SendOrder_Click(self, bAsyncOrder):
         try:
-            if self.__dOrder['boxAccountType'].get() == "外幣專戶":
+            if self.__dOrder['boxAccountType'].get_price() == "外幣專戶":
                 nAccountType = 1
-            elif self.__dOrder['boxAccountType'].get() == "台幣專戶":
+            elif self.__dOrder['boxAccountType'].get_price() == "台幣專戶":
                 nAccountType = 2
 
-            if self.__dOrder['boxExchangeNo'].get() == "美股":
+            if self.__dOrder['boxExchangeNo'].get_price() == "美股":
                 bstrExchangeNo = 'US'
 
-            if self.__dOrder['boxBuySell'].get() == "買進":
+            if self.__dOrder['boxBuySell'].get_price() == "買進":
                 sBuySell = 0
-            elif self.__dOrder['boxBuySell'].get() == "賣出":
+            elif self.__dOrder['boxBuySell'].get_price() == "賣出":
                 sBuySell = 1
 
             # 建立下單用的參數(FOREIGNORDER)物件(下單時要填股票代號,買賣別,委託價,數量等等的一個物件)
@@ -185,19 +185,19 @@ class Order(Frame):
             # 專戶別
             oOrder.nAccountType = nAccountType
             # 扣款幣別(順序)
-            oOrder.bstrCurrency1 = self.__dOrder['boxCurrency1'].get()
-            oOrder.bstrCurrency2 = self.__dOrder['boxCurrency2'].get()
-            oOrder.bstrCurrency3 = self.__dOrder['boxCurrency3'].get()
+            oOrder.bstrCurrency1 = self.__dOrder['boxCurrency1'].get_price()
+            oOrder.bstrCurrency2 = self.__dOrder['boxCurrency2'].get_price()
+            oOrder.bstrCurrency3 = self.__dOrder['boxCurrency3'].get_price()
             # 交易所
             oOrder.bstrExchangeNo = bstrExchangeNo
             # 填入股票代號
-            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get()
+            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get_price()
             # 買賣別
             oOrder.sBuySell = sBuySell
             # 委託價
-            oOrder.bstrPrice = self.__dOrder['txtPrice'].get()
+            oOrder.bstrPrice = self.__dOrder['txtPrice'].get_price()
             # 委託數量
-            oOrder.nQty = int(self.__dOrder['txtQty'].get())
+            oOrder.nQty = int(self.__dOrder['txtQty'].get_price())
 
             message, m_nCode = skO.SendForeignStockOrder(self.__dOrder['txtID'], bAsyncOrder, oOrder)
             self.__oMsg.SendReturnMessage("Order", m_nCode, "SendForeignStockOrder", self.__dOrder['listInformation'])
@@ -276,26 +276,26 @@ class CancelOrder():
     def __btnSendOrder_Click(self):
         if self.__dOrder['boxAccount'] == '':
             messagebox.showerror("error！", '請選擇複委託帳號！')
-        elif self.__radVar.get() == 0 and self.__dOrder['txtSeqNo'].get() == '':
+        elif self.__radVar.get() == 0 and self.__dOrder['txtSeqNo'].get_price() == '':
             messagebox.showerror("error！", '請輸入欲取消的委託序號！')
-        elif self.__radVar.get() == 1 and self.__dOrder['txtBookNo'].get() == '':
+        elif self.__radVar.get() == 1 and self.__dOrder['txtBookNo'].get_price() == '':
             messagebox.showerror("error！", '請輸入欲取消的委託書號！')
         else:
             self.__SendOrder_Click(False)
 
     def __SendOrder_Click(self, bAsyncOrder):
         # 交易所
-        if self.__dOrder['boxExchangeNo'].get() == "美股":
+        if self.__dOrder['boxExchangeNo'].get_price() == "美股":
             bstrExchangeNo = 'US'
 
         try:
             if self.__radVar.get() == 0:
-                message, m_nCode = skO.CancelForeignStockOrderBySeqNo( self.__dOrder['txtID'], bAsyncOrder, self.__dOrder['boxAccount'],\
-                    self.__dOrder['txtSeqNo'].get(), bstrExchangeNo )
+                message, m_nCode = skO.CancelForeignStockOrderBySeqNo(self.__dOrder['txtID'], bAsyncOrder, self.__dOrder['boxAccount'], \
+                                                                      self.__dOrder['txtSeqNo'].get_price(), bstrExchangeNo)
                 self.__oMsg.SendReturnMessage("Order", m_nCode, "CancelForeignStockOrderBySeqNo", self.__dOrder['listInformation'])
             elif self.__radVar.get() == 1:
-                message, m_nCode = skO.CancelForeignStockOrderByBookNo( self.__dOrder['txtID'], bAsyncOrder, self.__dOrder['boxAccount'],\
-                    self.__dOrder['txtBookNo'].get(), bstrExchangeNo )
+                message, m_nCode = skO.CancelForeignStockOrderByBookNo(self.__dOrder['txtID'], bAsyncOrder, self.__dOrder['boxAccount'], \
+                                                                       self.__dOrder['txtBookNo'].get_price(), bstrExchangeNo)
                 self.__oMsg.SendReturnMessage("Order", m_nCode, "CancelForeignStockOrderByBookNo", self.__dOrder['listInformation'])
         except Exception as e:
             messagebox.showerror("error！", e)

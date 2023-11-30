@@ -12,7 +12,8 @@ def clean_strip(text):
     return text.replace("\xa0", "")
 
 
-def get(url):
+def get():
+    url = 'https://sjmain.esunsec.com.tw/z/zg/zg_BD_1_0.djhtm'
     chrome_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0;Win64; x64)\
                       AppleWebKit/537.36(KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36', }
     html = requests.get(url, headers=chrome_headers)
@@ -77,8 +78,7 @@ def notify(my_list, time):
 
 
 if __name__ == "__main__":
-    url = 'https://sjmain.esunsec.com.tw/z/zg/zg_BD_1_0.djhtm'
-    data, time = get(url)
+    data, time = get()
     resp = notify(data, time)
     # print(data)
     print(resp)

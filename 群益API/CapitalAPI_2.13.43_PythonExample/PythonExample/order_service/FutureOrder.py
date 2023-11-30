@@ -144,21 +144,21 @@ class Order(Frame):
 
     def __SendOrder_Click(self, bAsyncOrder):
         try:
-            if self.__dOrder['boxBuySell'].get() == "買進":
+            if self.__dOrder['boxBuySell'].get_price() == "買進":
                 sBuySell = 0
-            elif self.__dOrder['boxBuySell'].get() == "賣出":
+            elif self.__dOrder['boxBuySell'].get_price() == "賣出":
                 sBuySell = 1
 
-            if self.__dOrder['boxPeriod'].get() == "ROD":
+            if self.__dOrder['boxPeriod'].get_price() == "ROD":
                 sTradeType = 0
-            elif self.__dOrder['boxPeriod'].get() == "IOC":
+            elif self.__dOrder['boxPeriod'].get_price() == "IOC":
                 sTradeType = 1
-            elif self.__dOrder['boxPeriod'].get() == "FOK":
+            elif self.__dOrder['boxPeriod'].get_price() == "FOK":
                 sTradeType = 2
 
-            if self.__dOrder['boxFlag'].get() == "非當沖":
+            if self.__dOrder['boxFlag'].get_price() == "非當沖":
                 sDayTrade = 0
-            elif self.__dOrder['boxFlag'].get() == "當沖":
+            elif self.__dOrder['boxFlag'].get_price() == "當沖":
                 sDayTrade = 1
 
             # 建立下單用的參數(FUTUREORDER)物件(下單時要填商品代號,買賣別,委託價,數量等等的一個物件)
@@ -166,7 +166,7 @@ class Order(Frame):
             # 填入完整帳號
             oOrder.bstrFullAccount =  self.__dOrder['boxAccount']
             # 填入期權代號
-            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get()
+            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get_price()
             # 買賣別
             oOrder.sBuySell = sBuySell
             # ROD、IOC、FOK
@@ -174,9 +174,9 @@ class Order(Frame):
             # 非當沖、當沖
             oOrder.sDayTrade = sDayTrade
             # 委託價
-            oOrder.bstrPrice = self.__dOrder['txtPrice'].get()
+            oOrder.bstrPrice = self.__dOrder['txtPrice'].get_price()
             # 委託數量
-            oOrder.nQty = int(self.__dOrder['txtQty'].get())
+            oOrder.nQty = int(self.__dOrder['txtQty'].get_price())
 
             message, m_nCode = skO.SendFutureOrder(Global.Global_IID, bAsyncOrder, oOrder)
             self.__oMsg.SendReturnMessage("Order", m_nCode, "SendFutureOrder", self.__dOrder['listInformation'])
@@ -200,33 +200,33 @@ class Order(Frame):
 
     def __SendOrderCLR_Click(self, bAsyncOrder):
         try:
-            if self.__dOrder['boxBuySell'].get() == "買進":
+            if self.__dOrder['boxBuySell'].get_price() == "買進":
                 sBuySell = 0
-            elif self.__dOrder['boxBuySell'].get() == "賣出":
+            elif self.__dOrder['boxBuySell'].get_price() == "賣出":
                 sBuySell = 1
 
-            if self.__dOrder['boxPeriod'].get() == "ROD":
+            if self.__dOrder['boxPeriod'].get_price() == "ROD":
                 sTradeType = 0
-            elif self.__dOrder['boxPeriod'].get() == "IOC":
+            elif self.__dOrder['boxPeriod'].get_price() == "IOC":
                 sTradeType = 1
-            elif self.__dOrder['boxPeriod'].get() == "FOK":
+            elif self.__dOrder['boxPeriod'].get_price() == "FOK":
                 sTradeType = 2
 
-            if self.__dOrder['boxFlag'].get() == "非當沖":
+            if self.__dOrder['boxFlag'].get_price() == "非當沖":
                 sDayTrade = 0
-            elif self.__dOrder['boxFlag'].get() == "當沖":
+            elif self.__dOrder['boxFlag'].get_price() == "當沖":
                 sDayTrade = 1
 
-            if self.__dOrder['boxNewClose'].get() == "新倉":
+            if self.__dOrder['boxNewClose'].get_price() == "新倉":
                 sNewClose = 0
-            elif self.__dOrder['boxNewClose'].get() == "平倉":
+            elif self.__dOrder['boxNewClose'].get_price() == "平倉":
                 sNewClose = 1
-            elif self.__dOrder['boxNewClose'].get() == "自動":
+            elif self.__dOrder['boxNewClose'].get_price() == "自動":
                 sNewClose = 2
 
-            if self.__dOrder['boxReserved'].get() == "盤中":
+            if self.__dOrder['boxReserved'].get_price() == "盤中":
                 sReserved = 0
-            elif self.__dOrder['boxReserved'].get() == "T盤預約":
+            elif self.__dOrder['boxReserved'].get_price() == "T盤預約":
                 sReserved = 1
 
             # 建立下單用的參數(FUTUREORDER)物件(下單時要填商品代號,買賣別,委託價,數量等等的一個物件)
@@ -234,7 +234,7 @@ class Order(Frame):
             # 填入完整帳號
             oOrder.bstrFullAccount =  self.__dOrder['boxAccount']
             # 填入期權代號
-            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get()
+            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get_price()
             # 買賣別
             oOrder.sBuySell = sBuySell
             # ROD、IOC、FOK
@@ -242,9 +242,9 @@ class Order(Frame):
             # 非當沖、當沖
             oOrder.sDayTrade = sDayTrade
             # 委託價
-            oOrder.bstrPrice = self.__dOrder['txtPrice'].get()
+            oOrder.bstrPrice = self.__dOrder['txtPrice'].get_price()
             # 委託數量
-            oOrder.nQty = int(self.__dOrder['txtQty'].get())
+            oOrder.nQty = int(self.__dOrder['txtQty'].get_price())
             # 新倉、平倉、自動
             oOrder.sNewClose = sNewClose
             # 盤中、T盤預約
@@ -322,8 +322,8 @@ class DecreaseOrder(Frame):
 
     def __SendOrder_Click(self, bAsyncOrder):
         try:
-            message, m_nCode = skO.DecreaseOrderBySeqNo( Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'],\
-                self.__dOrder['txtSqlNo'].get(), int(self.__dOrder['txtDecreaseQty'].get()) )
+            message, m_nCode = skO.DecreaseOrderBySeqNo(Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'], \
+                                                        self.__dOrder['txtSqlNo'].get_price(), int(self.__dOrder['txtDecreaseQty'].get_price()))
             self.__oMsg.SendReturnMessage("Order", m_nCode, "DecreaseOrderBySeqNo", self.__dOrder['listInformation'])
             if bAsyncOrder == False and m_nCode == 0:
                 strMsg = "期貨委託減量: " + str(message)
@@ -395,15 +395,15 @@ class CancelOrder(Frame):
     def __btnAsyncSendOrder_Click(self):
         if self.__dOrder['boxAccount'] == '':
             messagebox.showerror("error！", '請選擇期貨帳號！')
-        elif self.__radVar.get() == 0 and self.__dOrder['txtStockNo'].get() == '':
+        elif self.__radVar.get() == 0 and self.__dOrder['txtStockNo'].get_price() == '':
             ans = messagebox.askquestion("提示", '未輸入商品代碼會刪除所有委託單，是否刪單？')
             if ans == 'yes':
                 self.__SendOrder_Click(True)
             else:
                 return
-        elif self.__radVar.get() == 1 and self.__dOrder['txtSeqNo'].get() == '':
+        elif self.__radVar.get() == 1 and self.__dOrder['txtSeqNo'].get_price() == '':
             messagebox.showerror("error！", '請輸入欲取消的委託序號！')
-        elif self.__radVar.get() == 2 and self.__dOrder['txtBookNo'].get() == '':
+        elif self.__radVar.get() == 2 and self.__dOrder['txtBookNo'].get_price() == '':
             messagebox.showerror("error！", '請輸入欲取消的委託書號！')
         else:
             self.__SendOrder_Click(True)
@@ -411,15 +411,15 @@ class CancelOrder(Frame):
     def __btnSendOrder_Click(self):
         if self.__dOrder['boxAccount'] == '':
             messagebox.showerror("error！", '請選擇期貨帳號！')
-        elif self.__radVar.get() == 0 and self.__dOrder['txtStockNo'].get() == '':
+        elif self.__radVar.get() == 0 and self.__dOrder['txtStockNo'].get_price() == '':
             ans = messagebox.askquestion("提示", '未輸入商品代碼會刪除所有委託單，是否刪單？')
             if ans == 'yes':
                 self.__SendOrder_Click(False)
             else:
                 return
-        elif self.__radVar.get() == 1 and self.__dOrder['txtSeqNo'].get() == '':
+        elif self.__radVar.get() == 1 and self.__dOrder['txtSeqNo'].get_price() == '':
             messagebox.showerror("error！", '請輸入欲取消的委託序號！')
-        elif self.__radVar.get() == 2 and self.__dOrder['txtBookNo'].get() == '':
+        elif self.__radVar.get() == 2 and self.__dOrder['txtBookNo'].get_price() == '':
             messagebox.showerror("error！", '請輸入欲取消的委託書號！')
         else:
             self.__SendOrder_Click(False)
@@ -427,22 +427,22 @@ class CancelOrder(Frame):
     def __SendOrder_Click(self, bAsyncOrder):
         try:
             if self.__radVar.get() == 0:
-                message, m_nCode = skO.CancelOrderByStockNo( Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'],\
-                    self.__dOrder['txtStockNo'].get() )
+                message, m_nCode = skO.CancelOrderByStockNo(Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'], \
+                                                            self.__dOrder['txtStockNo'].get_price())
                 self.__oMsg.SendReturnMessage("Order", m_nCode, "CancelOrderByStockNo", self.__dOrder['listInformation'])
                 if bAsyncOrder == False and m_nCode == 0:
                     strMsg = "期貨委託刪單依商品代碼: " + str(message)
                     self.__oMsg.WriteMessage( strMsg, self.__dOrder['listInformation'])
             elif self.__radVar.get() == 1:
-                message, m_nCode = skO.CancelOrderBySeqNo( Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'],\
-                    self.__dOrder['txtSeqNo'].get() )
+                message, m_nCode = skO.CancelOrderBySeqNo(Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'], \
+                                                          self.__dOrder['txtSeqNo'].get_price())
                 self.__oMsg.SendReturnMessage("Order", m_nCode, "CancelOrderBySeqNo", self.__dOrder['listInformation'])
                 if bAsyncOrder == False and m_nCode == 0:
                     strMsg = "期貨委託刪單依委託序號: " + str(message)
                     self.__oMsg.WriteMessage( strMsg, self.__dOrder['listInformation'])
             elif self.__radVar.get() == 2:
-                message, m_nCode = skO.CancelOrderByBookNo( Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'],\
-                    self.__dOrder['txtBookNo'].get() )
+                message, m_nCode = skO.CancelOrderByBookNo(Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'], \
+                                                           self.__dOrder['txtBookNo'].get_price())
                 self.__oMsg.SendReturnMessage("Order", m_nCode, "CancelOrderByBookNo", self.__dOrder['listInformation'])
                 if bAsyncOrder == False and m_nCode == 0:
                     strMsg = "期貨委託刪單依委託書號: " + str(message)
@@ -643,8 +643,8 @@ class CorrectPrice(Frame):
                 elif self.boxPeriod.get() == "FOK":
                     nTradeType = 2
 
-                message,m_nCode = skO.CorrectPriceBySeqNo(Global.Global_IID,bAsyncOrder,\
-                    self.__dOrder['boxAccount'],self.__dOrder['txtPriceSeqNo'].get(),self.txtCorrectPrice.get(),nTradeType)
+                message,m_nCode = skO.CorrectPriceBySeqNo(Global.Global_IID, bAsyncOrder, \
+                                                          self.__dOrder['boxAccount'], self.__dOrder['txtPriceSeqNo'].get_price(), self.txtCorrectPrice.get(), nTradeType)
                 self.__oMsg.SendReturnMessage("Order", m_nCode, "CorrectPriceBySeqNo", self.__dOrder['listInformation'])
                 if bAsyncOrder == False and m_nCode == 0:
                     strMsg = "期貨委託改價依委託序號: " + str(message)
@@ -658,8 +658,8 @@ class CorrectPrice(Frame):
                 elif self.boxPeriod.get() == "FOK":
                     nTradeType = 2
 
-                message,m_nCode = skO.CorrectPriceByBookNo(Global.Global_IID,bAsyncOrder,\
-                    self.__dOrder['boxAccount'],bstrMarketSymbol,self.__dOrder['txtPriceBookNo'].get(),self.txtCorrectPrice.get(),nTradeType)
+                message,m_nCode = skO.CorrectPriceByBookNo(Global.Global_IID, bAsyncOrder, \
+                                                           self.__dOrder['boxAccount'], bstrMarketSymbol, self.__dOrder['txtPriceBookNo'].get_price(), self.txtCorrectPrice.get(), nTradeType)
                 self.__oMsg.SendReturnMessage("Order", m_nCode, "CorrectPriceByBookNo", self.__dOrder['listInformation'])
                 if bAsyncOrder == False and m_nCode == 0:
                     strMsg = "期貨委託改價依委託書號: " + str(message)

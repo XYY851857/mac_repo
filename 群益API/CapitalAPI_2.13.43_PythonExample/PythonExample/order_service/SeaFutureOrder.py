@@ -226,29 +226,29 @@ class Order(Frame):
 
     def __SendOrder_Click(self, bAsyncOrder):
         try:
-            if self.__dOrder['boxBuySell'].get() == "買進":
+            if self.__dOrder['boxBuySell'].get_price() == "買進":
                 sBuySell = 0
-            elif self.__dOrder['boxBuySell'].get() == "賣出":
+            elif self.__dOrder['boxBuySell'].get_price() == "賣出":
                 sBuySell = 1
 
-            if self.__dOrder['boxNewClose'].get() == "新倉":
+            if self.__dOrder['boxNewClose'].get_price() == "新倉":
                 sNewClose = 0
 
-            if self.__dOrder['boxFlag'].get() == "非當沖":
+            if self.__dOrder['boxFlag'].get_price() == "非當沖":
                 sDayTrade = 0
-            elif self.__dOrder['boxFlag'].get() == "當沖":
+            elif self.__dOrder['boxFlag'].get_price() == "當沖":
                 sDayTrade = 1
 
-            if self.__dOrder['boxPeriod'].get() == "ROD":
+            if self.__dOrder['boxPeriod'].get_price() == "ROD":
                 sTradeType = 0
 
-            if self.__dOrder['boxSpecialTradeType'].get() == "LMT（限價）":
+            if self.__dOrder['boxSpecialTradeType'].get_price() == "LMT（限價）":
                 sSpecialTradeType = 0
-            elif self.__dOrder['boxSpecialTradeType'].get() == "MKT（市價）":
+            elif self.__dOrder['boxSpecialTradeType'].get_price() == "MKT（市價）":
                 sSpecialTradeType = 1
-            elif self.__dOrder['boxSpecialTradeType'].get() == "STL（停損限價）":
+            elif self.__dOrder['boxSpecialTradeType'].get_price() == "STL（停損限價）":
                 sSpecialTradeType = 2
-            elif self.__dOrder['boxSpecialTradeType'].get() == "STP（停損市價）":
+            elif self.__dOrder['boxSpecialTradeType'].get_price() == "STP（停損市價）":
                 sSpecialTradeType = 3
 
             # 建立下單用的參數(OVERSEAFUTUREORDER)物件(下單時要填商品代號,買賣別,委託價,數量等等的一個物件)
@@ -256,21 +256,21 @@ class Order(Frame):
             # 填入完整帳號
             oOrder.bstrFullAccount =  self.__dOrder['boxAccount']
             # 填入交易所代號
-            oOrder.bstrExchangeNo = self.__dOrder['txtExchangeNo'] .get()
+            oOrder.bstrExchangeNo = self.__dOrder['txtExchangeNo'] .get_price()
             # 填入期權代號
-            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get()
+            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get_price()
             # 近月商品年月
-            oOrder.bstrYearMonth = self.__dOrder['txtYearMonth'].get()
+            oOrder.bstrYearMonth = self.__dOrder['txtYearMonth'].get_price()
             # 委託價
-            oOrder.bstrOrder = self.__dOrder['txtOrder'].get()
+            oOrder.bstrOrder = self.__dOrder['txtOrder'].get_price()
             # 委託價分子
-            oOrder.bstrOrderNumerator = self.__dOrder['txtOrderNumerator'].get()
+            oOrder.bstrOrderNumerator = self.__dOrder['txtOrderNumerator'].get_price()
             # 觸發價
-            oOrder.bstrTrigger = self.__dOrder['txtTrigger'].get()
+            oOrder.bstrTrigger = self.__dOrder['txtTrigger'].get_price()
             # 觸發價分子
-            oOrder.bstrTriggerNumerator = self.__dOrder['txtTriggerNumerator'].get()
+            oOrder.bstrTriggerNumerator = self.__dOrder['txtTriggerNumerator'].get_price()
             # 委託數量
-            oOrder.nQty = int(self.__dOrder['txtQty'].get())
+            oOrder.nQty = int(self.__dOrder['txtQty'].get_price())
             # 買賣別
             oOrder.sBuySell = sBuySell
             # 新倉
@@ -293,29 +293,29 @@ class Order(Frame):
 
     def __btnSendOrderOLID_Click(self,bAsyncOrder = True):
         try:
-            if self.__dOrder['boxBuySell'].get() == "買進":
+            if self.__dOrder['boxBuySell'].get_price() == "買進":
                 sBuySell = 0
-            elif self.__dOrder['boxBuySell'].get() == "賣出":
+            elif self.__dOrder['boxBuySell'].get_price() == "賣出":
                 sBuySell = 1
 
-            if self.__dOrder['boxNewClose'].get() == "新倉":
+            if self.__dOrder['boxNewClose'].get_price() == "新倉":
                 sNewClose = 0
 
-            if self.__dOrder['boxFlag'].get() == "非當沖":
+            if self.__dOrder['boxFlag'].get_price() == "非當沖":
                 sDayTrade = 0
-            elif self.__dOrder['boxFlag'].get() == "當沖":
+            elif self.__dOrder['boxFlag'].get_price() == "當沖":
                 sDayTrade = 1
 
-            if self.__dOrder['boxPeriod'].get() == "ROD":
+            if self.__dOrder['boxPeriod'].get_price() == "ROD":
                 sTradeType = 0
 
-            if self.__dOrder['boxSpecialTradeType'].get() == "LMT（限價）":
+            if self.__dOrder['boxSpecialTradeType'].get_price() == "LMT（限價）":
                 sSpecialTradeType = 0
-            elif self.__dOrder['boxSpecialTradeType'].get() == "MKT（市價）":
+            elif self.__dOrder['boxSpecialTradeType'].get_price() == "MKT（市價）":
                 sSpecialTradeType = 1
-            elif self.__dOrder['boxSpecialTradeType'].get() == "STL（停損限價）":
+            elif self.__dOrder['boxSpecialTradeType'].get_price() == "STL（停損限價）":
                 sSpecialTradeType = 2
-            elif self.__dOrder['boxSpecialTradeType'].get() == "STP（停損市價）":
+            elif self.__dOrder['boxSpecialTradeType'].get_price() == "STP（停損市價）":
                 sSpecialTradeType = 3
 
             # 建立下單用的參數(OVERSEAFUTUREORDER)物件(下單時要填商品代號,買賣別,委託價,數量等等的一個物件)
@@ -323,21 +323,21 @@ class Order(Frame):
             # 填入完整帳號
             oOrder.bstrFullAccount =  self.__dOrder['boxAccount']
             # 填入交易所代號
-            oOrder.bstrExchangeNo = self.__dOrder['txtExchangeNo'].get()
+            oOrder.bstrExchangeNo = self.__dOrder['txtExchangeNo'].get_price()
             # 填入期權代號
-            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get()
+            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get_price()
             # 近月商品年月
-            oOrder.bstrYearMonth = self.__dOrder['txtYearMonth'].get()
+            oOrder.bstrYearMonth = self.__dOrder['txtYearMonth'].get_price()
             # 委託價
-            oOrder.bstrOrder = self.__dOrder['txtOrder'].get()
+            oOrder.bstrOrder = self.__dOrder['txtOrder'].get_price()
             # 委託價分子
-            oOrder.bstrOrderNumerator = self.__dOrder['txtOrderNumerator'].get()
+            oOrder.bstrOrderNumerator = self.__dOrder['txtOrderNumerator'].get_price()
             # 觸發價
-            oOrder.bstrTrigger = self.__dOrder['txtTrigger'].get()
+            oOrder.bstrTrigger = self.__dOrder['txtTrigger'].get_price()
             # 觸發價分子
-            oOrder.bstrTriggerNumerator = self.__dOrder['txtTriggerNumerator'].get()
+            oOrder.bstrTriggerNumerator = self.__dOrder['txtTriggerNumerator'].get_price()
             # 委託數量
-            oOrder.nQty = int(self.__dOrder['txtQty'].get())
+            oOrder.nQty = int(self.__dOrder['txtQty'].get_price())
             # 買賣別
             oOrder.sBuySell = sBuySell
             # 新倉
@@ -356,29 +356,29 @@ class Order(Frame):
 
     def __btnSendSpreadOrder_Click(self,bAsyncOrder = True):
         try:
-            if self.__dOrder['boxBuySell'].get() == "買進":
+            if self.__dOrder['boxBuySell'].get_price() == "買進":
                 sBuySell = 0
-            elif self.__dOrder['boxBuySell'].get() == "賣出":
+            elif self.__dOrder['boxBuySell'].get_price() == "賣出":
                 sBuySell = 1
 
-            if self.__dOrder['boxNewClose'].get() == "新倉":
+            if self.__dOrder['boxNewClose'].get_price() == "新倉":
                 sNewClose = 0
 
-            if self.__dOrder['boxFlag'].get() == "非當沖":
+            if self.__dOrder['boxFlag'].get_price() == "非當沖":
                 sDayTrade = 0
-            elif self.__dOrder['boxFlag'].get() == "當沖":
+            elif self.__dOrder['boxFlag'].get_price() == "當沖":
                 sDayTrade = 1
 
-            if self.__dOrder['boxPeriod'].get() == "ROD":
+            if self.__dOrder['boxPeriod'].get_price() == "ROD":
                 sTradeType = 0
 
-            if self.__dOrder['boxSpecialTradeType'].get() == "LMT（限價）":
+            if self.__dOrder['boxSpecialTradeType'].get_price() == "LMT（限價）":
                 sSpecialTradeType = 0
-            elif self.__dOrder['boxSpecialTradeType'].get() == "MKT（市價）":
+            elif self.__dOrder['boxSpecialTradeType'].get_price() == "MKT（市價）":
                 sSpecialTradeType = 1
-            elif self.__dOrder['boxSpecialTradeType'].get() == "STL（停損限價）":
+            elif self.__dOrder['boxSpecialTradeType'].get_price() == "STL（停損限價）":
                 sSpecialTradeType = 2
-            elif self.__dOrder['boxSpecialTradeType'].get() == "STP（停損市價）":
+            elif self.__dOrder['boxSpecialTradeType'].get_price() == "STP（停損市價）":
                 sSpecialTradeType = 3
 
             # 建立下單用的參數(OVERSEAFUTUREORDER)物件(下單時要填商品代號,買賣別,委託價,數量等等的一個物件)
@@ -386,23 +386,23 @@ class Order(Frame):
             # 填入完整帳號
             oOrder.bstrFullAccount =  self.__dOrder['boxAccount']
             # 填入交易所代號
-            oOrder.bstrExchangeNo = self.__dOrder['txtExchangeNo'].get()
+            oOrder.bstrExchangeNo = self.__dOrder['txtExchangeNo'].get_price()
             # 填入期權代號
-            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get()
+            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get_price()
             # 近月商品年月
-            oOrder.bstrYearMonth = self.__dOrder['txtYearMonth'].get()
+            oOrder.bstrYearMonth = self.__dOrder['txtYearMonth'].get_price()
             # 價差商品年月
-            oOrder.bstrYearMonth2 = self.__dOrder["txtYearMonth2"].get()
+            oOrder.bstrYearMonth2 = self.__dOrder["txtYearMonth2"].get_price()
             # 委託價
-            oOrder.bstrOrder = self.__dOrder['txtOrder'].get()
+            oOrder.bstrOrder = self.__dOrder['txtOrder'].get_price()
             # 委託價分子
-            oOrder.bstrOrderNumerator = self.__dOrder['txtOrderNumerator'].get()
+            oOrder.bstrOrderNumerator = self.__dOrder['txtOrderNumerator'].get_price()
             # 觸發價
-            oOrder.bstrTrigger = self.__dOrder['txtTrigger'].get()
+            oOrder.bstrTrigger = self.__dOrder['txtTrigger'].get_price()
             # 觸發價分子
-            oOrder.bstrTriggerNumerator = self.__dOrder['txtTriggerNumerator'].get()
+            oOrder.bstrTriggerNumerator = self.__dOrder['txtTriggerNumerator'].get_price()
             # 委託數量
-            oOrder.nQty = int(self.__dOrder['txtQty'].get())
+            oOrder.nQty = int(self.__dOrder['txtQty'].get_price())
             # 買賣別
             oOrder.sBuySell = sBuySell
             # 新倉
@@ -421,29 +421,29 @@ class Order(Frame):
 
     def __btnSendSpreadOrderOLID_Click(self):
         try:
-            if self.__dOrder['boxBuySell'].get() == "買進":
+            if self.__dOrder['boxBuySell'].get_price() == "買進":
                 sBuySell = 0
-            elif self.__dOrder['boxBuySell'].get() == "賣出":
+            elif self.__dOrder['boxBuySell'].get_price() == "賣出":
                 sBuySell = 1
 
-            if self.__dOrder['boxNewClose'].get() == "新倉":
+            if self.__dOrder['boxNewClose'].get_price() == "新倉":
                 sNewClose = 0
 
-            if self.__dOrder['boxFlag'].get() == "非當沖":
+            if self.__dOrder['boxFlag'].get_price() == "非當沖":
                 sDayTrade = 0
-            elif self.__dOrder['boxFlag'].get() == "當沖":
+            elif self.__dOrder['boxFlag'].get_price() == "當沖":
                 sDayTrade = 1
 
-            if self.__dOrder['boxPeriod'].get() == "ROD":
+            if self.__dOrder['boxPeriod'].get_price() == "ROD":
                 sTradeType = 0
 
-            if self.__dOrder['boxSpecialTradeType'].get() == "LMT（限價）":
+            if self.__dOrder['boxSpecialTradeType'].get_price() == "LMT（限價）":
                 sSpecialTradeType = 0
-            elif self.__dOrder['boxSpecialTradeType'].get() == "MKT（市價）":
+            elif self.__dOrder['boxSpecialTradeType'].get_price() == "MKT（市價）":
                 sSpecialTradeType = 1
-            elif self.__dOrder['boxSpecialTradeType'].get() == "STL（停損限價）":
+            elif self.__dOrder['boxSpecialTradeType'].get_price() == "STL（停損限價）":
                 sSpecialTradeType = 2
-            elif self.__dOrder['boxSpecialTradeType'].get() == "STP（停損市價）":
+            elif self.__dOrder['boxSpecialTradeType'].get_price() == "STP（停損市價）":
                 sSpecialTradeType = 3
 
             # 建立下單用的參數(OVERSEAFUTUREORDER)物件(下單時要填商品代號,買賣別,委託價,數量等等的一個物件)
@@ -451,23 +451,23 @@ class Order(Frame):
             # 填入完整帳號
             oOrder.bstrFullAccount =  self.__dOrder['boxAccount']
             # 填入交易所代號
-            oOrder.bstrExchangeNo = self.__dOrder['txtExchangeNo'].get()
+            oOrder.bstrExchangeNo = self.__dOrder['txtExchangeNo'].get_price()
             # 填入期權代號
-            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get()
+            oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get_price()
             # 近月商品年月
-            oOrder.bstrYearMonth = self.__dOrder['txtYearMonth'].get()
+            oOrder.bstrYearMonth = self.__dOrder['txtYearMonth'].get_price()
             # 價差商品年月
-            oOrder.bstrYearMonth2 = self.__dOrder["txtYearMonth2"].get()
+            oOrder.bstrYearMonth2 = self.__dOrder["txtYearMonth2"].get_price()
             # 委託價
-            oOrder.bstrOrder = self.__dOrder['txtOrder'].get()
+            oOrder.bstrOrder = self.__dOrder['txtOrder'].get_price()
             # 委託價分子
-            oOrder.bstrOrderNumerator = self.__dOrder['txtOrderNumerator'].get()
+            oOrder.bstrOrderNumerator = self.__dOrder['txtOrderNumerator'].get_price()
             # 觸發價
-            oOrder.bstrTrigger = self.__dOrder['txtTrigger'].get()
+            oOrder.bstrTrigger = self.__dOrder['txtTrigger'].get_price()
             # 觸發價分子
-            oOrder.bstrTriggerNumerator = self.__dOrder['txtTriggerNumerator'].get()
+            oOrder.bstrTriggerNumerator = self.__dOrder['txtTriggerNumerator'].get_price()
             # 委託數量
-            oOrder.nQty = int(self.__dOrder['txtQty'].get())
+            oOrder.nQty = int(self.__dOrder['txtQty'].get_price())
             # 買賣別
             oOrder.sBuySell = sBuySell
             # 新倉
@@ -547,8 +547,8 @@ class DecreaseOrder(Frame):
 
     def __SendOrder_Click(self, bAsyncOrder):
         try:
-            message, m_nCode = skO.OverSeaDecreaseOrderBySeqNo( Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'],\
-                self.__dOrder['txtSqlNo'].get(), int(self.__dOrder['txtDecreaseQty'].get()) )
+            message, m_nCode = skO.OverSeaDecreaseOrderBySeqNo(Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'], \
+                                                               self.__dOrder['txtSqlNo'].get_price(), int(self.__dOrder['txtDecreaseQty'].get_price()))
             self.__oMsg.SendReturnMessage("Order", m_nCode, "OverSeaDecreaseOrderBySeqNo", self.__dOrder['listInformation'])
             if bAsyncOrder == False and m_nCode == 0:
                 strMsg = "海期減量: " + str(message)
@@ -618,9 +618,9 @@ class CancelOrder(Frame):
     def __btnSendOrder_Click(self):
         if self.__dOrder['boxAccount'] == '':
             messagebox.showerror("error！", '請選擇海期帳號！')
-        elif self.__radVar.get() == 0 and self.__dOrder['txtSeqNo'].get() == '':
+        elif self.__radVar.get() == 0 and self.__dOrder['txtSeqNo'].get_price() == '':
             messagebox.showerror("error！", '請輸入欲取消的委託序號！')
-        elif self.__radVar.get() == 2 and self.__dOrder['txtBookNo'].get() == '':
+        elif self.__radVar.get() == 2 and self.__dOrder['txtBookNo'].get_price() == '':
             messagebox.showerror("error！", '請輸入欲取消的委託書號！')
         else:
             self.__SendOrder_Click(False)
@@ -629,9 +629,9 @@ class CancelOrder(Frame):
     def __btnSendOrderAsync_Click(self):
         if self.__dOrder['boxAccount'] == '':
             messagebox.showerror("error！", '請選擇海期帳號！')
-        elif self.__radVar.get() == 0 and self.__dOrder['txtSeqNo'].get() == '':
+        elif self.__radVar.get() == 0 and self.__dOrder['txtSeqNo'].get_price() == '':
             messagebox.showerror("error！", '請輸入欲取消的委託序號！')
-        elif self.__radVar.get() == 2 and self.__dOrder['txtBookNo'].get() == '':
+        elif self.__radVar.get() == 2 and self.__dOrder['txtBookNo'].get_price() == '':
             messagebox.showerror("error！", '請輸入欲取消的委託書號！')
         else:
             self.__SendOrder_Click(True)
@@ -639,16 +639,16 @@ class CancelOrder(Frame):
     def __SendOrder_Click(self, bAsyncOrder):
         try:
             if self.__radVar.get() == 0:
-                message, m_nCode = skO.OverSeaCancelOrderBySeqNo( Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'],\
-                    self.__dOrder['txtSeqNo'].get() )
+                message, m_nCode = skO.OverSeaCancelOrderBySeqNo(Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'], \
+                                                                 self.__dOrder['txtSeqNo'].get_price())
                 self.__oMsg.SendReturnMessage("Order", m_nCode, "OverSeaCancelOrderBySeqNo", self.__dOrder['listInformation'])
                 if bAsyncOrder == False and m_nCode == 0:
                     strMsg = "海期刪單: " + str(message)
                     self.__oMsg.WriteMessage( strMsg, self.__dOrder['listInformation'])
 
             elif self.__radVar.get() == 2:
-                message, m_nCode = skO.OverSeaCancelOrderByBookNo( Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'],\
-                    self.__dOrder['txtBookNo'].get() )
+                message, m_nCode = skO.OverSeaCancelOrderByBookNo(Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'], \
+                                                                  self.__dOrder['txtBookNo'].get_price())
                 self.__oMsg.SendReturnMessage("Order", m_nCode, "OverSeaCancelOrderByBookNo", self.__dOrder['listInformation'])
                 if bAsyncOrder == False and m_nCode == 0:
                     strMsg = "海期刪單: " + str(message)

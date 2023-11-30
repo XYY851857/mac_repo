@@ -136,31 +136,31 @@ class MITFutureOrder(Frame):
             messagebox.showerror("error！", '請選擇期貨帳號！')
         else:
             try:
-                if self.__dOrder['boxBuySell'].get() == "買進":
+                if self.__dOrder['boxBuySell'].get_price() == "買進":
                     sBuySell = 0
-                elif self.__dOrder['boxBuySell'].get() == "賣出":
+                elif self.__dOrder['boxBuySell'].get_price() == "賣出":
                     sBuySell = 1
 
-                if self.__dOrder['boxPeriod'].get() == "IOC":
+                if self.__dOrder['boxPeriod'].get_price() == "IOC":
                     sTradeType = 1
-                elif self.__dOrder['boxPeriod'].get() == "FOK":
+                elif self.__dOrder['boxPeriod'].get_price() == "FOK":
                     sTradeType = 2
 
-                if self.__dOrder['boxNewClose'].get() == "新倉":
+                if self.__dOrder['boxNewClose'].get_price() == "新倉":
                     sNewClose = 0
-                elif self.__dOrder['boxNewClose'].get() == "平倉":
+                elif self.__dOrder['boxNewClose'].get_price() == "平倉":
                     sNewClose = 1
-                elif self.__dOrder['boxNewClose'].get() == "自動":
+                elif self.__dOrder['boxNewClose'].get_price() == "自動":
                     sNewClose = 2
 
-                if self.__dOrder['boxFlag'].get() == "非當沖":
+                if self.__dOrder['boxFlag'].get_price() == "非當沖":
                     sDayTrade = 0
-                elif self.__dOrder['boxFlag'].get() == "當沖":
+                elif self.__dOrder['boxFlag'].get_price() == "當沖":
                     sDayTrade = 1
 
-                if self.__dOrder['boxASYNC'].get() == "同步":
+                if self.__dOrder['boxASYNC'].get_price() == "同步":
                     bAsyncOrder = 0
-                elif self.__dOrder['boxASYNC'].get() == "非同步":
+                elif self.__dOrder['boxASYNC'].get_price() == "非同步":
                     bAsyncOrder = 1
 
                 # 建立下單用的參數(FUTUREORDER)物件(下單時要填商品代號,買賣別,委託價,數量等等的一個物件)
@@ -168,7 +168,7 @@ class MITFutureOrder(Frame):
                 # 填入完整帳號
                 oOrder.bstrFullAccount =  self.__dOrder['boxAccount']
                 # 填入期權代號
-                oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get()
+                oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get_price()
                 # 買賣別
                 oOrder.sBuySell = sBuySell
                 # IOC、FOK
@@ -178,11 +178,11 @@ class MITFutureOrder(Frame):
                 # 非當沖、當沖
                 oOrder.sDayTrade = sDayTrade
                 # 成交價
-                oOrder.bstrDealPrice = self.__dOrder['txtDealPrice'].get()
+                oOrder.bstrDealPrice = self.__dOrder['txtDealPrice'].get_price()
                 # 委託數量
-                oOrder.nQty = int(self.__dOrder['txtQty'].get())
+                oOrder.nQty = int(self.__dOrder['txtQty'].get_price())
                 # 觸發價
-                oOrder.bstrTrigger = self.__dOrder['txtTrigger'].get()
+                oOrder.bstrTrigger = self.__dOrder['txtTrigger'].get_price()
 
                 message,m_nCode = skO.SendFutureMITOrder(Global.Global_IID, bAsyncOrder, oOrder)
 
@@ -303,26 +303,26 @@ class MITOptionOrder(Frame):
             messagebox.showerror("error！", '請選擇期貨帳號！')
         else:
             try:
-                if self.__dOrder['boxBuySell'].get() == "買進":
+                if self.__dOrder['boxBuySell'].get_price() == "買進":
                     sBuySell = 0
-                elif self.__dOrder['boxBuySell'].get() == "賣出":
+                elif self.__dOrder['boxBuySell'].get_price() == "賣出":
                     sBuySell = 1
 
-                if  self.__dOrder['boxPeriod'].get() == "IOC":
+                if  self.__dOrder['boxPeriod'].get_price() == "IOC":
                     sTradeType = 1
-                elif self.__dOrder['boxPeriod'].get() == "FOK":
+                elif self.__dOrder['boxPeriod'].get_price() == "FOK":
                     sTradeType = 2
 
-                if self.__dOrder['boxNewClose'].get() == "新倉":
+                if self.__dOrder['boxNewClose'].get_price() == "新倉":
                     sNewClose = 0
-                elif self.__dOrder['boxNewClose'].get() == "平倉":
+                elif self.__dOrder['boxNewClose'].get_price() == "平倉":
                     sNewClose = 1
-                elif self.__dOrder['boxNewClose'].get() == "自動":
+                elif self.__dOrder['boxNewClose'].get_price() == "自動":
                     sNewClose = 2
 
-                if self.__dOrder['boxASYNC'].get() == "同步":
+                if self.__dOrder['boxASYNC'].get_price() == "同步":
                     bAsyncOrder = 0
-                elif self.__dOrder['boxASYNC'].get() == "非同步":
+                elif self.__dOrder['boxASYNC'].get_price() == "非同步":
                     bAsyncOrder = 1
 
                 # 建立下單用的參數(FUTUREORDER)物件(下單時要填商品代號,買賣別,委託價,數量等等的一個物件)
@@ -330,7 +330,7 @@ class MITOptionOrder(Frame):
                 # 填入完整帳號
                 oOrder.bstrFullAccount =  self.__dOrder['boxAccount']
                 # 填入期權代號
-                oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get()
+                oOrder.bstrStockNo = self.__dOrder['txtStockNo'].get_price()
                 # 買賣別
                 oOrder.sBuySell = sBuySell
                 # IOC、FOK
@@ -338,11 +338,11 @@ class MITOptionOrder(Frame):
                 # 新倉、平倉、自動
                 oOrder.sNewClose = sNewClose
                 # 成交價
-                oOrder.bstrDealPrice = self.__dOrder['txtDealPrice'].get()
+                oOrder.bstrDealPrice = self.__dOrder['txtDealPrice'].get_price()
                 # 委託數量
-                oOrder.nQty = int(self.__dOrder['txtQty'].get())
+                oOrder.nQty = int(self.__dOrder['txtQty'].get_price())
                 # 觸發價
-                oOrder.bstrTrigger = self.__dOrder['txtTrigger'].get()
+                oOrder.bstrTrigger = self.__dOrder['txtTrigger'].get_price()
 
                 message, m_nCode = skO.SendOptionMITOrder(Global.Global_IID, bAsyncOrder, oOrder)
                 self.__oMsg.SendReturnMessage("Order", m_nCode, "SendOptionMITOrder", self.__dOrder['listInformation'])
@@ -417,18 +417,18 @@ class MITCancel(Frame):
             messagebox.showerror("error！", '請選擇期貨帳號！')
         else:
             try:
-                if self.__dOrder['boxASYNC'].get() == "同步":
+                if self.__dOrder['boxASYNC'].get_price() == "同步":
                     bAsyncOrder = 0
-                elif self.__dOrder['boxASYNC'].get() == "非同步":
+                elif self.__dOrder['boxASYNC'].get_price() == "非同步":
                     bAsyncOrder = 1
-                if self.__dOrder['boxType'].get() == "期貨":
-                    message, m_nCode = skO.CancelFutureMIT(Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'],self.__dOrder['txtSmartKey'].get(),"MIT")
+                if self.__dOrder['boxType'].get_price() == "期貨":
+                    message, m_nCode = skO.CancelFutureMIT(Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'], self.__dOrder['txtSmartKey'].get_price(), "MIT")
                     self.__oMsg.SendReturnMessage("Order", m_nCode, "CancelFutureMIT", self.__dOrder['listInformation'])
                     if bAsyncOrder == False and m_nCode ==0:                    
                         strMsg = "期貨MIT刪單: " + str(message)
                         self.__oMsg.WriteMessage( strMsg, self.__dOrder['listInformation'])
-                elif self.__dOrder['boxType'].get() == "選擇權":
-                    message, m_nCode = skO.CancelOptionMIT(Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'],self.__dOrder['txtSmartKey'].get(),"MIT")
+                elif self.__dOrder['boxType'].get_price() == "選擇權":
+                    message, m_nCode = skO.CancelOptionMIT(Global.Global_IID, bAsyncOrder, self.__dOrder['boxAccount'], self.__dOrder['txtSmartKey'].get_price(), "MIT")
                     self.__oMsg.SendReturnMessage("Order", m_nCode, "CancelOptionMIT", self.__dOrder['listInformation'])
                     if bAsyncOrder == False and m_nCode ==0:                    
                         strMsg = "選擇權MIT刪單: " + str(message)
