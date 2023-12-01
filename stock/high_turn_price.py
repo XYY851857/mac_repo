@@ -9,18 +9,18 @@ import os
 from stock.turnover_rate import get
 
 
-def reset():
-    folder_path = '/Users/xyy/PycharmProjects/LeetCode_MAC/DATA'
-    for file in os.listdir(folder_path):
-        file_path = os.path.join(folder_path, file)
-        try:
-            if os.path.isfile(file_path):
-                os.unlink(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
-        except Exception as e:
-            print(f"Failed to delete {file_path}. Reason: {e}")
-    print('Initialized....')
+# def reset():
+#     folder_path = '/Users/xyy/PycharmProjects/LeetCode_MAC/DATA'
+#     for file in os.listdir(folder_path):
+#         file_path = os.path.join(folder_path, file)
+#         try:
+#             if os.path.isfile(file_path):
+#                 os.unlink(file_path)
+#             elif os.path.isdir(file_path):
+#                 shutil.rmtree(file_path)
+#         except Exception as e:
+#             print(f"Failed to delete {file_path}. Reason: {e}")
+#     print('Initialized....')
 
 
 def get_list():
@@ -32,10 +32,7 @@ def get_list():
     return process_data
 
 
-
-
 def strategy(stock_id, df):  # 未完成
-
     count = 0
     while count <= 5:
         for item in range(len(df)):
@@ -60,7 +57,7 @@ def get_price(url, stock_id):
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/111.25 (KHTML, like Gecko) Chrome/99.0.2345.81 Safari/123.36'}
     result_df = pd.DataFrame()
     print('connecting.....')
-    for i in range(0, 10):
+    for i in range(0, 2300):
         current, yday = None, None
         res = requests.get(url, headers=headers)
         # 最新價格
@@ -83,7 +80,7 @@ def get_price(url, stock_id):
             'pct': pct
         }, index=[stock_id])
         result_df = pd.concat([result_df, df], ignore_index=True)
-        time.sleep(0.5)
+        time.sleep(1)
         print(df)
         write(stock_id, df)
         # strategy(stock_id, result_df)
@@ -91,9 +88,9 @@ def get_price(url, stock_id):
 
 
 if __name__ == "__main__":
-    reset()
+    # reset()
     high_turn_list = get_list()
-    for item in range(len(high_turn_list)):
-        stock_id = f'{high_turn_list[item]}'
+    for item in range(0, 1):
+        stock_id = '2329'  # f'{high_turn_list[item]}'
         url = f"https://tw.quote.finance.yahoo.net/quote/q?type=ta&perd=d&mkt=10&sym={stock_id}&v=1&callback=jQuery111302872649618000682_1649814120914&_=1649814120915"
         get_price(url, stock_id)

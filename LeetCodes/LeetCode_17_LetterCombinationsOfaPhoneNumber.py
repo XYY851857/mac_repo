@@ -1,24 +1,31 @@
-"""
-2-9，傳回該數字可以表示的所有可能的字母組合。以任意順序回傳答案。
-下面給出了數字到字母的映射（就像電話按鈕一樣）。請注意，1 不映射到任何字母。
-範例1：
-輸入： digits = "23"
-輸出： ["ad","ae","af","bd","be","bf","cd","ce","cf"]
-範例2：
-輸入： digits = ""
-輸出： []
-範例3：
-輸入： digits = "2"
-輸出： ["a","b","c"]
-限制條件：
-0 <= digits.length <= 4
-digits[i]是 範圍內的數字['2', '9']。
-"""
+class Solution:
+    def letterCombinations(self, digit_input):
+        num_dict = {'1': [], '2': ['a', 'b', 'c'], '3': ['d', 'e', 'f'], '4': ['g', 'h', 'i'], '5': ['j', 'k', 'l'],
+                    '6': ['m', 'n', 'o'], '7': ['p', 'q', 'r', 's'], '8': ['t', 'u', 'v'], '9': ['w', 'x', 'y', 'z'],
+                    '0': [' '], }
 
+        def backtrack(index, path):
+            if index == len(digits):
+                combinations.append("".join(path))
+                return
 
-def algo():
-    pass
+            current_digit = digits[index]
+
+            if current_digit == '1':
+                backtrack(index + 1, path)
+            if current_digit in num_dict and num_dict[current_digit] is not None:
+                for char in num_dict[current_digit]:
+                    path.append(char)
+                    backtrack(index + 1, path)
+                    path.pop()
+
+        combinations = []
+        backtrack(0, [])
+        return combinations
 
 
 if __name__ == "__main__":
-    digits = int(input("input digit:"))
+    solution = Solution()
+    digits = input("input digit:")
+    ans = solution.letterCombinations(digits)
+    print(ans)
