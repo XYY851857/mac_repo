@@ -27,7 +27,7 @@ def get(url):
 
 def notify(dealer, investment_trust, foreign_investment, time):
     url = "https://notify-api.line.me/api/notify"
-    token = "jn41HsUfAyRN3intXow0qL4LpjpoyNfIiQhXSJe8apM"
+    token = "DEd00NVq4jTeZZ8yfMMP1OoOoCkZyhy1wTq4wEWmGjG"
     headers = {"Authorization": "Bearer " + token}
     message = f'\n資料擷取時間：{time}\n外資{foreign_investment:.6}\n投信{investment_trust}\n自營商{dealer}'
 
