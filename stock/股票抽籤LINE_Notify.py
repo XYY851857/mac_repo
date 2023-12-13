@@ -48,12 +48,11 @@ def notify(data):
 def convert_pd(number, state):  # 已完成
     result_df = []
     for step in range(len(number)):
-        if state[step] != "已截止":
-            df_data = pd.DataFrame({
-                'number': number[step],
-                'state': state[step]
-            }, index=[number[step]])
-            result_df.append(df_data)
+        df_data = pd.DataFrame({
+            'number': number[step],
+            'state': state[step]
+        }, index=[number[step]])
+        result_df.append(df_data)
     combined_df = pd.concat(result_df)
 
     return combined_df

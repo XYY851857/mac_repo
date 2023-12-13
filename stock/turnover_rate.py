@@ -2,6 +2,7 @@
 URL : https://sjmain.esunsec.com.tw/z/zg/zg_BD_1_0.djhtm
 token : HLphngWSvoKdfrCdF3alRDOlvWBrLoZdlL2Ir54Fg5N
 """
+import pandas as pd
 # -*- coding: utf-8 -*-
 import requests
 from bs4 import BeautifulSoup
@@ -22,10 +23,10 @@ def get():
     # print('soup', soup)
     pattern = re.compile(r'javascript:Link2Stk(\'\d\')')
     tags = soup.find_all('tr')
-    print('len(tags)', len(tags))
+    # print('len(tags)', len(tags))
     # print(tags)
     time = soup.find('div', class_="t11")
-    print(time.text)
+    # print(time.text)
     rows = []
     for tag in tags:
         row = []
@@ -45,7 +46,7 @@ def get():
         row.append(clean_strip(price.text.strip()))
         # print(price.text)
 
-        vol_and_turnover_rate_tags = tag.find_all('td', class_="t3n1")  #成交量及週轉率
+        vol_and_turnover_rate_tags = tag.find_all('td', class_="t3n1")  # 成交量及週轉率
 
         if len(vol_and_turnover_rate_tags) == 3:
             volume = clean_strip(vol_and_turnover_rate_tags[1].text.strip())
@@ -65,23 +66,58 @@ def trans_list(data):
     return new_data
 
 
-def notify(my_list, time):
-    new_list = trans_list(my_list)
+def convert_pd(new_list):  # 已完成
+    result_df = []
+    print(new_list)
+    for step in range(len(new_list)):
+        df_data = pd.DataFrame({
+            'pack': new_list[step],
+        }, index=[new_list[step]])
+        result_df.append(df_data)
+    combined_df = pd.concat(result_df)
+    # print(combined_df)
+
+    return combined_df
+
+
+def write(new_list):  # 已完成
+    df = convert_pd(new_list)
+    file_path = '/Users/xyy/PycharmProjects/LeetCode_MAC/DATA/Turnover_DATA/DATA.txt'
+    with open(file_path, 'w', encoding='UTF-8') as file:
+        df.to_csv(file, index=False)
+
+
+def notify(new_list, time):
     url = "https://notify-api.line.me/api/notify"
     token = "DEd00NVq4jTeZZ8yfMMP1OoOoCkZyhy1wTq4wEWmGjG"
     # token = "p9w0gHpW8GMAdin0YSdpq467C73swBi9h8rjzdcM7nA"  # TEST token
     headers = {"Authorization": "Bearer " + token}
     message = '\n\n'.join([' '.join(row) for row in new_list])
-    print(new_list)
-    print(message)
-
     data = {"message": f"\n資料{time.text}\n{message}"}
     resp = requests.post(url, headers=headers, data=data)
     return resp
 
 
+def data_dup(var1):
+    file_df = pd.read_csv('/Users/xyy/PycharmProjects/LeetCode_MAC/DATA/Turnover_DATA/DATA.txt', encoding='utf-8')
+    data1 = file_df['pack'][0:len(file_df) + 1].tolist()
+    for step in range(0, len(file_df)):
+        if var1[step][0] == data1[step]:  # 判斷代號是否已在資料庫
+            # print('False')
+            return False  # 重複
+        else:
+            print(var1[step][0])
+            print(data1[step])
+            # print('True')
+            return True  # 不重複
+
+
 if __name__ == "__main__":
     data, time = get()
-    resp = notify(data, time)
-    # print(data)
-    print(resp)
+    data_list = trans_list(data)
+    # data_dup(data_list)
+    if data_dup(data_list):
+        resp = notify(data_list, time)
+        # print(resp)
+        if resp:  # 傳送成功寫入資料庫
+            write(data_list)
