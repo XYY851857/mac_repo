@@ -16,61 +16,39 @@ def merge_list(number, state, new_lens, name, end_time, profit_reward, price, am
         if rate[step] == '0%':
             rate[step] = '尚未公告'
         new_list.append([
-                            f'{step + 1}.\n{number[step]} {name[step]}\n承銷價：{price[step]}*{amount[step]}張\n價差：{profit_reward[step]}'
-                            f'$\n截止日：{end_time[step]}\n狀態：{state[step]}\n中籤率：{rate[step]}'])
+            f'{step + 1}.\n{number[step]} {name[step]}\n承銷價：{price[step]}*{amount[step]}張\n價差：{profit_reward[step]}'
+            f'$\n截止日：{end_time[step]}\n狀態：{state[step]}\n中籤率：{rate[step]}'])
     # print(new_list)
     return new_list
 
 
-def notify(number, state, lens, name, end_time, profit_reward, price, amount, rate, new_lens):
+def notify(data):
+    number, state, lens, name, end_time, profit_reward, price, amount, rate = data
+
     def sent(message):
         url = "https://notify-api.line.me/api/notify"
-        token = "p9w0gHpW8GMAdin0YSdpq467C73swBi9h8rjzdcM7nA"  # TEST token
-        # token = "7ABygdMg7ZHO9B55ysAYlAJk28ZLJyHxdgJJJW1buIG"
+        # token = "p9w0gHpW8GMAdin0YSdpq467C73swBi9h8rjzdcM7nA"  # TEST token
+        token = "7ABygdMg7ZHO9B55ysAYlAJk28ZLJyHxdgJJJW1buIG"
         headers = {"Authorization": "Bearer " + token}
         data = {"message": f'\n{message}\n**此為自動推播**\n**請以公告為主**'}
         resp = requests.post(url, headers=headers, data=data)
         return resp
 
-
-    if new_lens == 0:  # 無新資料
-        message = f'今天是{datetime.now().date()}\n沒有新的抽籤標的喔'
+    if lens == 0:  # 無新資料
+        message = f'今天是{datetime.now().date()}\n沒有即將開始的抽籤標的喔'
         sent(message)
         return False
     else:
-        new_list = merge_list(number, state, new_lens, name, end_time, profit_reward, price, amount, rate)
+        new_list = merge_list(number, state, lens, name, end_time, profit_reward, price, amount, rate)
         message = f'\n\n\n資料時間：{datetime.now().date()}\n'.join([' '.join(row) for row in new_list])
         sent(message)
         return True
 
 
-
-
-def data_dup(get_number, get_state, ori_lens):  # NOTE:  lens = 3  已完成
-    file_df = pd.read_csv('/Users/xyy/PycharmProjects/LeetCode_MAC/DATA/股票抽籤DATA/DATA.txt', encoding='utf-8')
-    number_data = file_df['number'][0:ori_lens + 1].tolist()
-    state_data = file_df['state'][0:ori_lens + 1].tolist()
-    new_lens = 0
-    # print(set(number_data))
-    # print(type(number_data[0]), type(state_data[2]))
-    for slow_step in range(0, ori_lens):  # 慢指針
-        if int(get_number[slow_step]) not in set(number_data):  # 判斷代號是否已在資料庫
-            new_lens += 1
-            continue
-        else:  # 代號和資料庫重複
-            for fast_step in range(len(state_data)):  # 快指針，定位number重複的位置並比對state是否相同
-                if int(get_number[slow_step]) == int(number_data[fast_step]) and str(get_state[fast_step]) != str(
-                        state_data[fast_step]):
-                    new_lens += 1
-                    continue
-    # print(f'{get_number}\n{number_data}\n{new_lens}')
-    return new_lens
-
-
 def convert_pd(number, state):  # 已完成
     result_df = []
     for step in range(len(number)):
-        if state[step] == "已截止":
+        if state[step] != "已截止":
             df_data = pd.DataFrame({
                 'number': number[step],
                 'state': state[step]
@@ -81,7 +59,7 @@ def convert_pd(number, state):  # 已完成
     return combined_df
 
 
-def write(number, state, lens):  # 已完成
+def write(number, state):  # 已完成
     df = convert_pd(number, state)
     file_path = '/Users/xyy/PycharmProjects/LeetCode_MAC/DATA/股票抽籤DATA/DATA.txt'
     with open(file_path, 'w', encoding='UTF-8') as file:
@@ -154,8 +132,7 @@ def get(url_get):
 if __name__ == "__main__":
     url = 'https://histock.tw/stock/public.aspx'
     data = get(url)  # 去的資料
-    new_lens = data_dup(*data[:3])  # 對比前次資料並過濾新資料長度
-    resp = notify(*data, new_lens)
+    resp = notify(data)
 
     if resp:  # 傳送成功寫入資料庫
-        write(*data[:2], new_lens)
+        write(*data[:2])
