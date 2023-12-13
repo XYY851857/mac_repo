@@ -69,8 +69,11 @@ def notify(my_list, time):
     new_list = trans_list(my_list)
     url = "https://notify-api.line.me/api/notify"
     token = "DEd00NVq4jTeZZ8yfMMP1OoOoCkZyhy1wTq4wEWmGjG"
+    # token = "p9w0gHpW8GMAdin0YSdpq467C73swBi9h8rjzdcM7nA"  # TEST token
     headers = {"Authorization": "Bearer " + token}
     message = '\n\n'.join([' '.join(row) for row in new_list])
+    print(new_list)
+    print(message)
 
     data = {"message": f"\n資料{time.text}\n{message}"}
     resp = requests.post(url, headers=headers, data=data)

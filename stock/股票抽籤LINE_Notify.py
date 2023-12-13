@@ -1,27 +1,49 @@
 """
 url = 'https://histock.tw/stock/public.aspx'
-token = 'SFJszrFZMHievEBqql9GFFSU29PtoMdwgeEOH84CX6c'
 截止日/價差/市場別/中籤率
 名稱/
 """
 import requests
 from bs4 import BeautifulSoup
-import re
 import pandas as pd
 import re
 from datetime import datetime
 
 
-def notify(number, state, lens, name, end_time, profit_reward):  # 未完成
-    new_list = trans_list(my_list)
-    url = "https://notify-api.line.me/api/notify"
-    token = "DEd00NVq4jTeZZ8yfMMP1OoOoCkZyhy1wTq4wEWmGjG"
-    headers = {"Authorization": "Bearer " + token}
-    message = '\n\n'.join([' '.join(row) for row in new_list])
+def merge_list(number, state, new_lens, name, end_time, profit_reward, price, amount, rate):
+    new_list = []
+    for step in range(new_lens):
+        if rate[step] == '0%':
+            rate[step] = '尚未公告'
+        new_list.append([
+                            f'{step + 1}.\n{number[step]} {name[step]}\n承銷價：{price[step]}*{amount[step]}張\n價差：{profit_reward[step]}'
+                            f'$\n截止日：{end_time[step]}\n狀態：{state[step]}\n中籤率：{rate[step]}'])
+    # print(new_list)
+    return new_list
 
-    data = {"message": f"\n資料時間：{datetime.now().date()}\n{message}"}
-    resp = requests.post(url, headers=headers, data=data)
-    return resp
+
+def notify(number, state, lens, name, end_time, profit_reward, price, amount, rate, new_lens):
+    def sent(message):
+        url = "https://notify-api.line.me/api/notify"
+        token = "p9w0gHpW8GMAdin0YSdpq467C73swBi9h8rjzdcM7nA"  # TEST token
+        # token = "7ABygdMg7ZHO9B55ysAYlAJk28ZLJyHxdgJJJW1buIG"
+        headers = {"Authorization": "Bearer " + token}
+        data = {"message": f'\n{message}\n**此為自動推播**\n**請以公告為主**'}
+        resp = requests.post(url, headers=headers, data=data)
+        return resp
+
+
+    if new_lens == 0:  # 無新資料
+        message = f'今天是{datetime.now().date()}\n沒有新的抽籤標的喔'
+        sent(message)
+        return False
+    else:
+        new_list = merge_list(number, state, new_lens, name, end_time, profit_reward, price, amount, rate)
+        message = f'\n\n\n資料時間：{datetime.now().date()}\n'.join([' '.join(row) for row in new_list])
+        sent(message)
+        return True
+
+
 
 
 def data_dup(get_number, get_state, ori_lens):  # NOTE:  lens = 3  已完成
@@ -36,30 +58,33 @@ def data_dup(get_number, get_state, ori_lens):  # NOTE:  lens = 3  已完成
             new_lens += 1
             continue
         else:  # 代號和資料庫重複
-            for fast_step in range(len(state_data)): # 快指針，定位number重複的位置並比對state是否相同
-                if get_number[slow_step] == number_data[fast_step] and get_state[fast_step] != state_data[fast_step]:
+            for fast_step in range(len(state_data)):  # 快指針，定位number重複的位置並比對state是否相同
+                if int(get_number[slow_step]) == int(number_data[fast_step]) and str(get_state[fast_step]) != str(
+                        state_data[fast_step]):
                     new_lens += 1
-
-    print(f'{get_number}\n{number_data}\n{new_lens}')
+                    continue
+    # print(f'{get_number}\n{number_data}\n{new_lens}')
     return new_lens
 
 
 def convert_pd(number, state):  # 已完成
     result_df = []
     for step in range(len(number)):
-        df_data = pd.DataFrame({
-            'number': number[step],
-            'state': state[step]
-        }, index=[number[step]])
-        result_df.append(df_data)
+        if state[step] == "已截止":
+            df_data = pd.DataFrame({
+                'number': number[step],
+                'state': state[step]
+            }, index=[number[step]])
+            result_df.append(df_data)
     combined_df = pd.concat(result_df)
 
     return combined_df
 
 
-def write(df):  # 已完成
+def write(number, state, lens):  # 已完成
+    df = convert_pd(number, state)
     file_path = '/Users/xyy/PycharmProjects/LeetCode_MAC/DATA/股票抽籤DATA/DATA.txt'
-    with open(file_path, 'a', encoding='UTF-8') as file:
+    with open(file_path, 'w', encoding='UTF-8') as file:
         df.to_csv(file, index=False)
 
 
@@ -106,24 +131,31 @@ def get(url_get):
         profit_reward.append(profit1)
         profit_percent.append(profit2)
 
-    time = soup.find_all('td', style="width:100px;")
+    time_data = soup.find_all('td', style="width:100px;")
     start_time, end_time = [], []
     for step in range(lens):
-        start_time.append(time[step].text.strip().split('~')[0])
-        end_time.append(time[step].text.strip().split('~')[1])
+        start_time.append(time_data[step].text.strip().split('~')[0])
+        end_time.append(time_data[step].text.strip().split('~')[1])
 
-    # df = convert_pd(number, state)
-    # # write(df)
-    # new_lens = data_dup(number, state, lens)
+    td_width67px = soup.find_all('td', style="width:67px;")
+    price, amount, rate = [], [], []
+    for step in range(2, lens * 6, 6):  # 承銷價 OK
+        price.append(td_width67px[step].text.strip())
 
-    return number, state, lens, name, end_time, profit_reward
+    for step in range(3, lens * 6, 6):  # 抽籤張數 OK
+        amount.append(td_width67px[step].text.strip())
+
+    for step in range(5, lens * 6, 6):  # 中籤率 OK
+        rate.append(f'{td_width67px[step].text.strip()}%')
+
+    return number, state, lens, name, end_time, profit_reward, price, amount, rate
 
 
 if __name__ == "__main__":
     url = 'https://histock.tw/stock/public.aspx'
-    token = 'SFJszrFZMHievEBqql9GFFSU29PtoMdwgeEOH84CX6c'
-    data = get(url)
-    df = convert_pd(*data[:2])
-    # write(df)
-    new_lens = data_dup(*data[:3])
+    data = get(url)  # 去的資料
+    new_lens = data_dup(*data[:3])  # 對比前次資料並過濾新資料長度
     resp = notify(*data, new_lens)
+
+    if resp:  # 傳送成功寫入資料庫
+        write(*data[:2], new_lens)
