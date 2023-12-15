@@ -106,8 +106,8 @@ def data_dup(var1):
             # print('False')
             return False  # 重複
         else:
-            print(var1[step][0])
-            print(data1[step])
+            # print(var1[step][0])
+            # print(data1[step])
             # print('True')
             return True  # 不重複
 

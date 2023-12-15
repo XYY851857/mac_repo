@@ -1,58 +1,40 @@
-data = [
-    ["女巫", "鬼", "蝙蝠", "糖果"],
-    ["蜘蛛", "蜘蛛", "糖果", "女巫"],
-    ["鬼", "南瓜", "蝙蝠", "鍋子"],
-    ["墓碑", "墓碑", "南瓜", "鍋子"],
-    ["南瓜", "女巫", "女巫", "蜘蛛"],
-    ["墓碑", "鬼", "墓碑", "鬼"],
-    ["鍋子", "糖果", "糖果", "蝙蝠"],
-    ["鍋子", "蜘蛛", "蝙蝠", "南瓜"],
-    ["墓碑", "蜘蛛", "糖果", "糖果"],
-    ["南瓜", "蜘蛛", "鬼", "鍋子"],
-    ["女巫", "墓碑", "蝙蝠", "蝙蝠"],
-    ["南瓜", "鍋子", "女巫", "鬼"],
-    ["糖果", "南瓜", "墓碑", "鍋子"],
-    ["鬼", "鬼", "女巫", "蜘蛛"],
-    ["女巫", "蜘蛛", "蝙蝠", "糖果"],
-    ["鍋子", "墓碑", "南瓜", "蝙蝠"],
-    ["鬼", "墓碑", "蜘蛛", "鍋子"],
-    ["蜘蛛", "女巫", "蝙蝠", "墓碑"],
-    ["女巫", "鬼", "糖果", "南瓜"],
-    ["南瓜", "蝙蝠", "鍋子", "糖果"],
-    ["女巫", "墓碑", "鍋子", "鬼"],
-    ["鬼", "女巫", "蝙蝠", "糖果"],
-    ["蜘蛛", "墓碑", "南瓜", "糖果"],
-    ["蝙蝠", "蜘蛛", "南瓜", "鍋子"]
-]
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.select import Select   # 使用 Select 對應下拉選單
+import time
 
+chrome_option = webdriver.ChromeOptions()
+chrome_option.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+driver = webdriver.Chrome(options=chrome_option)
 
-def process_data(data):
-    # 初始化元素次數的字典
-    element_count = {}
+# driver = webdriver.Chrome('/Users/xyy/Downloads/chromedriver-mac-arm64/chromedriver')
+driver.get('https://example.oxxostudio.tw/python/selenium/demo.html')  # 開啟範例網址
+a = driver.find_element(By.ID, 'a')                # 取得 id 為 a 的網頁元素 ( 按鈕 A )
+b = driver.find_element(By.CLASS_NAME, 'btn')      # 取得 class 為 btn 的網頁元素 ( 按鈕 B )
+c = driver.find_element(By.CSS_SELECTOR, '.test')  # 取得 class 為 test 的網頁元素 ( 按鈕 C )
+d = driver.find_element(By.NAME, 'dog')            # 取得屬性 name 為 dog 的網頁元素 ( 按鈕 D )
+h1 = driver.find_element(By.TAG_NAME, 'h1')        # 取得 tag h1 的網頁元素
+link1 = driver.find_element(By.LINK_TEXT, '我是超連結，點擊會開啟 Google 網站')  # 取得指定超連結文字的網頁元素
+link2 = driver.find_element(By.PARTIAL_LINK_TEXT, 'Google') # 取得超連結文字包含 Google 的網頁元素
+select = Select(driver.find_element(By.XPATH, '/html/body/select'))   # 取得 html > body > select 這個網頁元素
 
-    # 初始化每局遊戲元素的排列情況列表
-    game_arrangements = []
-
-    # 遍歷每局遊戲
-    for game in data:
-        game_arrangement = ', '.join(game)
-        game_arrangements.append(game_arrangement)
-
-        # 遍歷每個元素，更新次數
-        for element in game:
-            element_count[element] = element_count.get(element, 0) + 1
-
-    return element_count, game_arrangements
-
-
-element_count, game_arrangements = process_data(data)
-
-# 顯示每個元素的出現次數
-print("每個元素的出現次數:")
-for element, count in element_count.items():
-    print(f"{element}: {count}")
-
-# 顯示每局遊戲元素的排列情況
-print("\n每局遊戲元素的排列情況:")
-for i, arrangement in enumerate(game_arrangements, 1):
-    print(f"Game {i}: {arrangement}")
+a.click()        # 點擊 a
+print(a.text)    # 印出 a 元素的內容
+time.sleep(1)
+b.click()        # 點擊 b
+print(b.text)    # 印出 b 元素的內容
+time.sleep(1)
+c.click()        # 點擊 c
+print(c.text)    # 印出 c 元素的內容
+time.sleep(1)
+d.click()        # 點擊 d
+print(d.text)    # 印出 d 元素的內容
+time.sleep(1)
+select.select_by_index(2)  # 下拉選單選擇第三項 ( 第一項為 0 )
+time.sleep(1)
+h1.click()       # 點擊 h1
+# time.sleep(1)
+# link1.click()    # 點擊 link1
+# time.sleep(1)
+# link2.click()    # 點擊 link2
+print(link2.get_attribute('href'))   # 印出 link2 元素的 href 屬性

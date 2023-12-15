@@ -30,7 +30,7 @@ def notify(data):
         # token = "p9w0gHpW8GMAdin0YSdpq467C73swBi9h8rjzdcM7nA"  # TEST token
         token = "7ABygdMg7ZHO9B55ysAYlAJk28ZLJyHxdgJJJW1buIG"
         headers = {"Authorization": "Bearer " + token}
-        data = {"message": f'\n{message}\n**此為自動推播**\n**請以公告為主**'}
+        data = {"message": f'\n\n{message}\n**此為自動推播**\n**請以公告為主**'}
         resp = requests.post(url, headers=headers, data=data)
         return resp
 

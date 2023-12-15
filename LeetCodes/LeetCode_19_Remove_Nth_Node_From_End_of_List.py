@@ -20,9 +20,17 @@ class Solution:
 
 
 
+
 if __name__ == "__main__":
     solution = Solution()
     head = [1,2,3,4,5]
     n = 2
     data = Node(head)
-    ans = solution.removeNthFromEnd(data, n)
+    ans = solution.removeNthFromEnda(adaaataaa,a an)
+
+
+
+
+
+
+
