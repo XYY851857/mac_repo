@@ -72,8 +72,10 @@ def data_dup(data):
     for step in range(0, len(file_df)):
         if foreign[step] == foreign_get and invest[step] == invest_get and dealer[step] == dealer_get:
             # 判斷資料是否已在資料庫
+            print('False')
             return False  # 重複
         else:
+            print('True')
             return True  # 不重複
 
 
@@ -81,8 +83,8 @@ if __name__ == "__main__":
     url = "https://www.taifex.com.tw/cht/3/futContractsDate"
     time = (datetime.now()).strftime("%Y/%m/%d")
     data_set = get(url)
-    write(data_set)
     if data_dup(data_set):
         resp = notify(data_set, time)
+        print(resp)
         if resp:
             write(data_set)

@@ -30,7 +30,7 @@ def notify(data):
         # token = "p9w0gHpW8GMAdin0YSdpq467C73swBi9h8rjzdcM7nA"  # TEST token
         token = "7ABygdMg7ZHO9B55ysAYlAJk28ZLJyHxdgJJJW1buIG"
         headers = {"Authorization": "Bearer " + token}
-        data = {"message": f'\n\n{message}\n**此為自動推播**\n**請以公告為主**'}
+        data = {"message": f'\n資料時間：{datetime.now().date()}\n{message}\n\n**此為自動推播**\n**請以公告為主**\n**價差僅供參考**'}
         resp = requests.post(url, headers=headers, data=data)
         return resp
 
@@ -40,7 +40,7 @@ def notify(data):
         return False
     else:
         new_list = merge_list(number, state, lens, name, end_time, profit_reward, price, amount, rate)
-        message = f'\n\n\n資料時間：{datetime.now().date()}\n'.join([' '.join(row) for row in new_list])
+        message = f'\n\n'.join([' '.join(row) for row in new_list])
         sent(message)
         return True
 

@@ -101,14 +101,15 @@ def notify(new_list, time):
 def data_dup(var1):
     file_df = pd.read_csv('/Users/xyy/PycharmProjects/LeetCode_MAC/DATA/Turnover_DATA/DATA.txt', encoding='utf-8')
     data1 = file_df['pack'][0:len(file_df) + 1].tolist()
+    print(data1)
     for step in range(0, len(file_df)):
         if var1[step][0] == data1[step]:  # 判斷代號是否已在資料庫
-            # print('False')
+            print('False')
             return False  # 重複
         else:
             # print(var1[step][0])
             # print(data1[step])
-            # print('True')
+            print('True')
             return True  # 不重複
 
 
@@ -118,6 +119,6 @@ if __name__ == "__main__":
     # data_dup(data_list)
     if data_dup(data_list):
         resp = notify(data_list, time)
-        # print(resp)
+        print(resp)
         if resp:  # 傳送成功寫入資料庫
             write(data_list)
