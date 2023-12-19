@@ -38,3 +38,4 @@ h1.click()       # 點擊 h1
 # time.sleep(1)
 # link2.click()    # 點擊 link2
 print(link2.get_attribute('href'))   # 印出 link2 元素的 href 屬性
+input()
