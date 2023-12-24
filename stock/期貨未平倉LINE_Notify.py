@@ -30,7 +30,7 @@ def notify(data_set, time):
     dealer, investment_trust, foreign_investment = data_set
     url = "https://notify-api.line.me/api/notify"
     token = "DEd00NVq4jTeZZ8yfMMP1OoOoCkZyhy1wTq4wEWmGjG"
-    # token = "p9w0gHpW8GMAdin0YSdpq467C73swBi9h8rjzdcM7nA"  # TEST token
+    # token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
     headers = {"Authorization": "Bearer " + token}
     message = f'\n資料擷取時間：{time}\n外資{foreign_investment}\n投信{investment_trust}\n自營商{dealer}'
 
@@ -45,9 +45,9 @@ def convert_pd(data):
     result_df = []
     # print(data)
     df_data = pd.DataFrame({
-        'foreign': foreign_investment,
-        'invest': investment_trust,
-        'dealer': dealer
+        'foreign': str(foreign_investment),
+        'invest': str(investment_trust),
+        'dealer': str(dealer)
     }, index=['0'])
     result_df.append(df_data)
     combined_df = pd.concat(result_df)
@@ -70,12 +70,16 @@ def data_dup(data):
     invest = file_df['invest'][0:len(file_df) + 1].tolist()
     dealer = file_df['dealer'][0:len(file_df) + 1].tolist()
     for step in range(0, len(file_df)):
-        if foreign[step] == foreign_get and invest[step] == invest_get and dealer[step] == dealer_get:
+        if str(foreign[step]) == foreign_get and str(invest[step]) == invest_get and str(dealer[step]) == dealer_get:
+            # 資料必須轉字串，否則不到三位數資料為int
             # 判斷資料是否已在資料庫
             print('False')
             return False  # 重複
         else:
             print('True')
+            # print(type(foreign[step]), type(foreign_get))
+            # print(type(invest[step]), type(invest_get))
+            # print(type(dealer[step]), type(dealer_get))
             return True  # 不重複
 
 
@@ -88,3 +92,4 @@ if __name__ == "__main__":
         print(resp)
         if resp:
             write(data_set)
+            print('written')
