@@ -35,8 +35,6 @@ def notify(data):
         return resp
 
     if lens == 0:  # 無新資料
-        message = f'今天是{datetime.now().date()}\n沒有即將開始的抽籤標的喔'
-        sent(message)
         return False
     else:
         new_list = merge_list(number, state, lens, name, end_time, profit_reward, price, amount, rate)
