@@ -90,11 +90,17 @@ def write(new_list):  # 已完成
 def notify(new_list, time):
     url = "https://notify-api.line.me/api/notify"
     token = "DEd00NVq4jTeZZ8yfMMP1OoOoCkZyhy1wTq4wEWmGjG"
-    # token = "p9w0gHpW8GMAdin0YSdpq467C73swBi9h8rjzdcM7nA"  # TEST token
+    # token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
     headers = {"Authorization": "Bearer " + token}
     message = '\n\n'.join([' '.join(row) for row in new_list])
     data = {"message": f"\n資料{time.text}\n{message}"}
     resp = requests.post(url, headers=headers, data=data)
+    if resp != '<Response [200]>':
+        url = "https://notify-api.line.me/api/notify"
+        token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
+        headers = {"Authorization": "Bearer " + token}
+        data = {"message": f"\n資料{time.text}\nturnover_rate_LINE_Notify.py:\n{resp}"}
+        requests.post(url, headers=headers, data=data)
     return resp
 
 
@@ -107,8 +113,8 @@ def data_dup(var1):
             print('False')
             return False  # 重複
         else:
-            # print(var1[step][0])
-            # print(data1[step])
+            print(var1[step][0])
+            print(data1[step])
             print('True')
             return True  # 不重複
 
