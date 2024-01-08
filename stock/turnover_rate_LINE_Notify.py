@@ -95,7 +95,7 @@ def notify(new_list, time):
     message = '\n\n'.join([' '.join(row) for row in new_list])
     data = {"message": f"\n資料{time.text}\n{message}"}
     resp = requests.post(url, headers=headers, data=data)
-    if resp != '<Response [200]>':
+    if str(resp) != '<Response [200]>':
         url = "https://notify-api.line.me/api/notify"
         token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
         headers = {"Authorization": "Bearer " + token}
