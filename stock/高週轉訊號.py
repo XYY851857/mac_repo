@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import time
 import re
 import os
-from stock.turnover_rate import get
+from stock.turnover_rate_LINE_Notify import get
 
 
 # def reset():
