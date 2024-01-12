@@ -2,10 +2,12 @@
 URL : https://sjmain.esunsec.com.tw/z/zg/zg_BD_1_0.djhtm
 token : HLphngWSvoKdfrCdF3alRDOlvWBrLoZdlL2Ir54Fg5N
 """
+import traceback
 import pandas as pd
 # -*- coding: utf-8 -*-
 import requests
 from bs4 import BeautifulSoup
+from stock.股票抽籤LINE_Notify import report
 
 
 def clean_strip(text):
@@ -73,18 +75,14 @@ def write(new_list):  # 已完成
 
 def notify(new_list, time):
     url = "https://notify-api.line.me/api/notify"
-    token = "DEd00NVq4jTeZZ8yfMMP1OoOoCkZyhy1wTq4wEWmGjG"
-    # token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
+    # token = "DEd00NVq4jTeZZ8yfMMP1OoOoCkZyhy1wTq4wEWmGjG"
+    token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
     headers = {"Authorization": "Bearer " + token}
     message = '\n\n'.join([' '.join(row) for row in new_list])
     data = {"message": f"\n資料{time.text}\n{message}"}
     resp = requests.post(url, headers=headers, data=data)
     if str(resp) != '<Response [200]>':
-        url = "https://notify-api.line.me/api/notify"
-        token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
-        headers = {"Authorization": "Bearer " + token}
-        data = {"message": f"\n資料{time.text}\nturnover_rate_LINE_Notify.py:\n{resp}"}
-        requests.post(url, headers=headers, data=data)
+        report(resp)
     return resp
 
 
@@ -100,7 +98,7 @@ def data_dup(var1):
         else:
             # print(var1[step][0])
             # print(data1[step])
-            print('True')
+            # print('True')
             return True  # 不重複
 
 
@@ -111,19 +109,24 @@ def sort(arr):
 
 if __name__ == "__main__":
     data = []
-    for i in range(0, 2):
-        url = f'https://fubon-ebrokerdj.fbs.com.tw/z/zg/zg_BD_{i}_0.djhtm'
-        result = get(url)
-        time = result[1]
-        for step in range(2, 7):
-            data.append(result[0][step])
-    # print(data)
-    sort_data = sort(data)
+    try:
+        for i in range(0, 2):
+            url = f'https://fubon-ebrokerdj.fbs.com.tw/z/zg/zg_BD_{i}_0.djhtm'
+            result = get(url)
+            time = result[1]
+            for step in range(2, 7):
+                data.append(result[0][step])
+        # print(data)
+        sort_data = sort(data)
 
-    # data_list = trans_list(data)
-    # data_dup(data_list)
-    if data_dup(sort_data):
-        resp = notify(sort_data, time)
-        print(resp)
-        if resp:  # 傳送成功寫入資料庫
-            write(sort_data)
+        # data_list = trans_list(data)
+        # data_dup(data_list)
+        if data_dup(sort_data):
+            resp = notify(sort_data, time)
+            print(resp)
+            if str(resp) == '<Response [200]>':  # 傳送成功寫入資料庫
+                write(sort_data)
+
+    except Exception as e:
+        traceback.print_exc()
+        report(traceback.format_exc())  # 回報主控台錯誤訊息內容，會觸發Notify，請小心使用
