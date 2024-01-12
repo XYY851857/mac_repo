@@ -1,11 +1,15 @@
 """
 url : "https://tw.stock.yahoo.com/future/futures_uncovered.html"
 """
+import traceback
+
 import pandas as pd
 # -*- coding: utf-8 -*-
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+
+from stock.股票抽籤LINE_Notify import report
 
 
 def clean_strip(text):
@@ -29,14 +33,16 @@ def get(url):
 def notify(data_set, time):
     dealer, investment_trust, foreign_investment = data_set
     url = "https://notify-api.line.me/api/notify"
-    token = "DEd00NVq4jTeZZ8yfMMP1OoOoCkZyhy1wTq4wEWmGjG"
-    # token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
+    # token = "DEd00NVq4jTeZZ8yfMMP1OoOoCkZyhy1wTq4wEWmGjG"
+    token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
     headers = {"Authorization": "Bearer " + token}
     message = f'\n資料擷取時間：{time}\n外資{foreign_investment}\n投信{investment_trust}\n自營商{dealer}'
 
     data = {"message": message}
     resp = requests.post(url, headers=headers, data=data)
-    return resp
+    if str(resp) != '<Response [200]>':
+        report(resp)
+    return str(resp)
 
 
 def convert_pd(data):
@@ -85,11 +91,15 @@ def data_dup(data):
 
 if __name__ == "__main__":
     url = "https://www.taifex.com.tw/cht/3/futContractsDate"
-    time = (datetime.now()).strftime("%Y/%m/%d")
-    data_set = get(url)
-    if data_dup(data_set):
-        resp = notify(data_set, time)
-        print(resp)
-        if resp:
-            write(data_set)
-            print('written')
+    try:
+        time = (datetime.now()).strftime("%Y/%m/%d")
+        data_set = get(url)
+        if data_dup(data_set):
+            resp = notify(data_set, time)
+            print(resp)
+            if str(resp) == '<Response [200]>':  # 傳送成功寫入資料庫
+                write(data_set)
+                # print('written')
+    except Exception as e:
+        traceback.print_exc()
+        report(traceback.format_exc())  # 回報主控台錯誤訊息內容，會觸發Notify，請小心使用
