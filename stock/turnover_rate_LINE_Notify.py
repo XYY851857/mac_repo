@@ -75,8 +75,8 @@ def write(new_list):  # 已完成
 
 def notify(new_list, time):
     url = "https://notify-api.line.me/api/notify"
-    # token = "DEd00NVq4jTeZZ8yfMMP1OoOoCkZyhy1wTq4wEWmGjG"
-    token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
+    token = "DEd00NVq4jTeZZ8yfMMP1OoOoCkZyhy1wTq4wEWmGjG"
+    # token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
     headers = {"Authorization": "Bearer " + token}
     message = '\n\n'.join([' '.join(row) for row in new_list])
     data = {"message": f"\n資料{time.text}\n{message}"}
