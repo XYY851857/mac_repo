@@ -27,10 +27,11 @@ def notify(data):
 
     def sent(message):
         url = "https://notify-api.line.me/api/notify"
-        # token = "DxCYOr0EUTa4qGp78j7noc2vlQuX0cqHjESmTNB6rM2"  # TEST token
-        token = "7ABygdMg7ZHO9B55ysAYlAJk28ZLJyHxdgJJJW1buIG"
+        token = "DxCYOr0EUTa4qGp78j7noc2vlQuX0cqHjESmTNB6rM2"  # TEST token
+        # token = "7ABygdMg7ZHO9B55ysAYlAJk28ZLJyHxdgJJJW1buIG"
         headers = {"Authorization": "Bearer " + token}
-        data = {"message": f'\n資料時間：{datetime.now().date()}\n{message}\n\n**此為自動推播**\n**請以公告為主**\n**價差僅供參考**'}
+        data = {
+            "message": f'\n資料時間：{datetime.now().date()}\n{message}\n\n**此為自動推播**\n**請以公告為主**\n**價差僅供參考**'}
         resp = requests.post(url, headers=headers, data=data)
         return resp
 
@@ -74,7 +75,6 @@ def get(url_get):
     lens, state = 0, []
     for step in range(2, len(state_data), 3):
         state_cache = state_data[step]
-
         span_data = state_cache.find_all('span', style="color:gray;")
 
         if any(span.text.strip() == "已截止" for span in span_data):
@@ -90,13 +90,13 @@ def get(url_get):
 
     name_data = soup.find_all('a', href=re.compile(r'/stock/(\d+)'), target='_blank', title=False)
     name, number = [], []
-    for step in range(lens):
+    for step in range(0, lens):
         number.append(name_data[step].text.split('\xa0')[0])
         name.append(name_data[step].text.split('\xa0')[1])
 
     market_type_data = soup.find_all('td', style="width:70px;")
     market_type = []
-    for step in range(lens):
+    for step in range(0, lens):
         market_type.append(market_type_data[step].text.strip())
 
     profit_data = soup.find_all('span', class_="clr-rd")
@@ -106,9 +106,10 @@ def get(url_get):
         profit_reward.append(profit1)
         profit_percent.append(profit2)
 
+
     time_data = soup.find_all('td', style="width:100px;")
     start_time, end_time = [], []
-    for step in range(lens):
+    for step in range(0, lens):
         start_time.append(time_data[step].text.strip().split('~')[0])
         end_time.append(time_data[step].text.strip().split('~')[1])
 
@@ -128,8 +129,8 @@ def get(url_get):
 
 if __name__ == "__main__":
     url = 'https://histock.tw/stock/public.aspx'
-    data = get(url)  # 去的資料
+    data = get(url)  # 取得資料
     resp = notify(data)
-
+    print(resp)
     if resp:  # 傳送成功寫入資料庫
         write(*data[:2])
