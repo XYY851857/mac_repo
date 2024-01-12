@@ -38,8 +38,8 @@ def notify(data):
 
     def sent(message):
         url = "https://notify-api.line.me/api/notify"
-        token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
-        # token = "7ABygdMg7ZHO9B55ysAYlAJk28ZLJyHxdgJJJW1buIG"
+        # token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
+        token = "7ABygdMg7ZHO9B55ysAYlAJk28ZLJyHxdgJJJW1buIG"
         headers = {"Authorization": "Bearer " + token}
         data = {
             "message": f'\n資料時間：{datetime.now().date()}\n{message}\n\n**此為自動推播**\n**請以公告為主**\n**價差僅供參考**'}
