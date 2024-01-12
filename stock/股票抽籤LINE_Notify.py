@@ -12,11 +12,11 @@ import re
 from datetime import datetime
 
 
-def report(e):
+def report(file_name, e):
     url = "https://notify-api.line.me/api/notify"
     token = "O22XmpnxuecnSEFPJl01cKFQBhDMy7Omn1RMXjLwiiq"  # TEST token
     headers = {"Authorization": "Bearer " + token}
-    data = {"message": f"\n{datetime.now().strftime("%Y-%m-%d    %H:%M:%S")}\n股票抽籤_LINE_Notify.py:\n{e}"}
+    data = {"message": f"\n{datetime.now().strftime("%Y-%m-%d    %H:%M:%S")}\n{file_name}:\n{e}"}
     requests.post(url, headers=headers, data=data)
 
 
@@ -45,7 +45,7 @@ def notify(data):
             "message": f'\n資料時間：{datetime.now().date()}\n{message}\n\n**此為自動推播**\n**請以公告為主**\n**價差僅供參考**'}
         resp = requests.post(url, headers=headers, data=data)
         if str(resp) != '<Response [200]>':
-            report(resp)
+            report(__file__, resp)
         return resp
 
     if lens == 0:  # 無新資料
@@ -156,4 +156,4 @@ if __name__ == "__main__":
             write(*data[:2])
     except Exception as e:
         traceback.print_exc()
-        report(traceback.format_exc())  # 回報主控台錯誤訊息內容，會觸發Notify，請小心使用
+        report(__file__, traceback.format_exc())  # 回報主控台錯誤訊息內容，會觸發Notify，請小心使用

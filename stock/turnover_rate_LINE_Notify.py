@@ -82,7 +82,7 @@ def notify(new_list, time):
     data = {"message": f"\n資料{time.text}\n{message}"}
     resp = requests.post(url, headers=headers, data=data)
     if str(resp) != '<Response [200]>':
-        report(resp)
+        report(__file__, resp)
     return resp
 
 
@@ -129,4 +129,4 @@ if __name__ == "__main__":
 
     except Exception as e:
         traceback.print_exc()
-        report(traceback.format_exc())  # 回報主控台錯誤訊息內容，會觸發Notify，請小心使用
+        report(__file__, traceback.format_exc())  # 回報主控台錯誤訊息內容，會觸發Notify，請小心使用
