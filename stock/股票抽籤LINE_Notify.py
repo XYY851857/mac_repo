@@ -3,6 +3,8 @@ url = 'https://histock.tw/stock/public.aspx'
 截止日/價差/市場別/中籤率
 名稱/
 """
+import traceback
+
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -10,7 +12,16 @@ import re
 from datetime import datetime
 
 
-def merge_list(number, state, new_lens, name, end_time, profit_reward, price, amount, rate):
+def report(e):
+    url = "https://notify-api.line.me/api/notify"
+    token = "O22XmpnxuecnSEFPJl01cKFQBhDMy7Omn1RMXjLwiiq"  # TEST token
+    headers = {"Authorization": "Bearer " + token}
+    data = {"message": f"\n{datetime.now().strftime("%Y-%m-%d    %H:%M:%S")}\n股票抽籤_LINE_Notify.py:\n{e}"}
+    requests.post(url, headers=headers, data=data)
+
+
+def merge_list(data):
+    number, state, new_lens, name, end_time, profit_reward, price, amount, rate = data
     new_list = []
     for step in range(new_lens):
         if rate[step] == '0%':
@@ -27,21 +38,23 @@ def notify(data):
 
     def sent(message):
         url = "https://notify-api.line.me/api/notify"
-        token = "DxCYOr0EUTa4qGp78j7noc2vlQuX0cqHjESmTNB6rM2"  # TEST token
+        token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
         # token = "7ABygdMg7ZHO9B55ysAYlAJk28ZLJyHxdgJJJW1buIG"
         headers = {"Authorization": "Bearer " + token}
         data = {
             "message": f'\n資料時間：{datetime.now().date()}\n{message}\n\n**此為自動推播**\n**請以公告為主**\n**價差僅供參考**'}
         resp = requests.post(url, headers=headers, data=data)
+        if str(resp) != '<Response [200]>':
+            report(resp)
         return resp
 
     if lens == 0:  # 無新資料
         return False
     else:
-        new_list = merge_list(number, state, lens, name, end_time, profit_reward, price, amount, rate)
+        new_list = merge_list(data)
         message = f'\n\n'.join([' '.join(row) for row in new_list])
-        sent(message)
-        return True
+        resp_sent = sent(message)
+        return resp_sent
 
 
 def convert_pd(number, state):  # 已完成
@@ -88,24 +101,30 @@ def get(url_get):
 
         lens += 1
 
-    name_data = soup.find_all('a', href=re.compile(r'/stock/(\d+)'), target='_blank', title=False)
+    name_data = soup.find_all('td', style="color:#5482AB;font-weight:bold;width:120px;")
+    # print(name_data)
     name, number = [], []
     for step in range(0, lens):
-        number.append(name_data[step].text.split('\xa0')[0])
-        name.append(name_data[step].text.split('\xa0')[1])
+        number.append(name_data[step].text.split('\xa0')[0].strip())
+        name.append(name_data[step].text.split('\xa0')[1].strip())
 
     market_type_data = soup.find_all('td', style="width:70px;")
     market_type = []
     for step in range(0, lens):
         market_type.append(market_type_data[step].text.strip())
 
-    profit_data = soup.find_all('span', class_="clr-rd")
+    profit_target = soup.find_all('td', style="font-weight:bold;width:67px;")
+    # print(profit_target)
     profit_reward, profit_percent = [], []
-    for step in range(0, lens * 2, 2):
-        profit1, profit2 = profit_data[step].text.strip(), profit_data[step + 1].text.strip()
-        profit_reward.append(profit1)
-        profit_percent.append(profit2)
-
+    for step in range(0, lens * 3, 3):
+        profit_reward.append(profit_target[step].text.strip())
+        profit_percent.append(profit_target[step + 1].text.strip())
+        # print(profit_target[step].text.strip())  # 價差
+        # print(profit_target[step+1].text.strip())  # 報酬率
+    # for step in range(0, lens * 2, 2):  # 遇到初上市/櫃會有bug
+    #     profit1, profit2 = profit_data[step].text.strip(), profit_data[step + 1].text.strip()
+    #     profit_reward.append(profit1)
+    #     profit_percent.append(profit2)
 
     time_data = soup.find_all('td', style="width:100px;")
     start_time, end_time = [], []
@@ -129,8 +148,12 @@ def get(url_get):
 
 if __name__ == "__main__":
     url = 'https://histock.tw/stock/public.aspx'
-    data = get(url)  # 取得資料
-    resp = notify(data)
-    print(resp)
-    if resp:  # 傳送成功寫入資料庫
-        write(*data[:2])
+    try:
+        data = get(url)  # 取得資料
+        resp = notify(data)
+        print(str(resp))
+        if str(resp) == '<Response [200]>':  # 傳送成功寫入資料庫
+            write(*data[:2])
+    except Exception as e:
+        traceback.print_exc()
+        report(traceback.format_exc())  # 回報主控台錯誤訊息內容，會觸發Notify，請小心使用
