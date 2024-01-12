@@ -33,8 +33,8 @@ def get(url):
 def notify(data_set, time):
     dealer, investment_trust, foreign_investment = data_set
     url = "https://notify-api.line.me/api/notify"
-    # token = "DEd00NVq4jTeZZ8yfMMP1OoOoCkZyhy1wTq4wEWmGjG"
-    token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
+    token = "DEd00NVq4jTeZZ8yfMMP1OoOoCkZyhy1wTq4wEWmGjG"
+    # token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
     headers = {"Authorization": "Bearer " + token}
     message = f'\n資料擷取時間：{time}\n外資{foreign_investment}\n投信{investment_trust}\n自營商{dealer}'
 
