@@ -2,12 +2,20 @@
 URL : https://sjmain.esunsec.com.tw/z/zg/zg_BD_1_0.djhtm
 token : HLphngWSvoKdfrCdF3alRDOlvWBrLoZdlL2Ir54Fg5N
 """
+import os.path
 import traceback
 import pandas as pd
-# -*- coding: utf-8 -*-
 import requests
+from datetime import datetime
 from bs4 import BeautifulSoup
-from stock.股票抽籤LINE_Notify import report
+
+
+def report(file_name, e):
+    url = "https://notify-api.line.me/api/notify"
+    token = "O22XmpnxuecnSEFPJl01cKFQBhDMy7Omn1RMXjLwiiq"  # TEST token
+    headers = {"Authorization": "Bearer " + token}
+    data = {"message": f"\n{datetime.now().strftime("%Y-%m-%d    %H:%M:%S")}\n{file_name}:\n{e}"}
+    requests.post(url, headers=headers, data=data)
 
 
 def clean_strip(text):
@@ -93,7 +101,7 @@ def data_dup(var1):
     for step in range(0, len(file_df)):
         # print(var1)
         if var1[step][0] == data1[step]:  # 判斷代號是否已在資料庫
-            print('False')
+            print(f'{datetime.now().strftime("%Y-%m-%d  %H:%M:%S")}: Duplicate')
             return False  # 重複
         else:
             # print(var1[step][0])
@@ -123,9 +131,9 @@ if __name__ == "__main__":
         # data_dup(data_list)
         if data_dup(sort_data):
             resp = notify(sort_data, time)
-            print(resp)
             if str(resp) == '<Response [200]>':  # 傳送成功寫入資料庫
                 write(sort_data)
+                print(f'{os.path.basename(__file__)}:  {datetime.now().strftime("%Y-%m-%d  %H:%M:%S")}:  {resp}')
 
     except Exception as e:
         traceback.print_exc()

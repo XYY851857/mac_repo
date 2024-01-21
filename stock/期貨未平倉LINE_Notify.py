@@ -1,15 +1,21 @@
 """
 url : "https://tw.stock.yahoo.com/future/futures_uncovered.html"
 """
+import os.path
 import traceback
-
 import pandas as pd
 # -*- coding: utf-8 -*-
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-from stock.股票抽籤LINE_Notify import report
+
+def report(file_name, e):
+    url = "https://notify-api.line.me/api/notify"
+    token = "O22XmpnxuecnSEFPJl01cKFQBhDMy7Omn1RMXjLwiiq"  # TEST token
+    headers = {"Authorization": "Bearer " + token}
+    data = {"message": f"\n{datetime.now().strftime("%Y-%m-%d    %H:%M:%S")}\n{file_name}:\n{e}"}
+    requests.post(url, headers=headers, data=data)
 
 
 def clean_strip(text):
@@ -79,10 +85,10 @@ def data_dup(data):
         if str(foreign[step]) == foreign_get and str(invest[step]) == invest_get and str(dealer[step]) == dealer_get:
             # 資料必須轉字串，否則不到三位數資料為int
             # 判斷資料是否已在資料庫
-            print('False')
+            print(f'{datetime.now().strftime("%Y-%m-%d  %H:%M:%S")}: Duplicate')
             return False  # 重複
         else:
-            print('True')
+            # print('True')
             # print(type(foreign[step]), type(foreign_get))
             # print(type(invest[step]), type(invest_get))
             # print(type(dealer[step]), type(dealer_get))
@@ -96,10 +102,9 @@ if __name__ == "__main__":
         data_set = get(url)
         if data_dup(data_set):
             resp = notify(data_set, time)
-            print(resp)
             if str(resp) == '<Response [200]>':  # 傳送成功寫入資料庫
                 write(data_set)
-                # print('written')
+                print(f'{os.path.basename(__file__)}  {datetime.now().strftime("%Y-%m-%d  %H:%M:%S")}:  {resp}')
     except Exception as e:
         traceback.print_exc()
         report(__file__, traceback.format_exc())  # 回報主控台錯誤訊息內容，會觸發Notify，請小心使用
