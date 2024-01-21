@@ -7,7 +7,7 @@
 """
 
 
-def gala(value):
+def algo(value):
     if value == value[::-1]:
         return True
     return False
@@ -15,7 +15,7 @@ def gala(value):
 
 if __name__ == '__main__':
     data = str(input('input num : '))
-    data = gala(data)
+    data = algo(data)
     if data:
         print('是')
     else:
