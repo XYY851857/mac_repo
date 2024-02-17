@@ -6,6 +6,7 @@ import traceback
 import pandas as pd
 # -*- coding: utf-8 -*-
 import requests
+import pymongo
 from bs4 import BeautifulSoup
 from datetime import datetime
 
@@ -28,7 +29,6 @@ def get(url):
     html = requests.get(url, headers=chrome_headers)
 
     soup = BeautifulSoup(html.text, 'html.parser')
-    # print(soup)
     num = soup.find_all('font', color='blue')
     dealer = clean_strip(num[5].text)
     investment_trust = clean_strip(num[11].text)
@@ -55,7 +55,6 @@ def convert_pd(data):
     dealer, investment_trust, foreign_investment = data
 
     result_df = []
-    # print(data)
     df_data = pd.DataFrame({
         'foreign': str(foreign_investment),
         'invest': str(investment_trust),
@@ -63,24 +62,27 @@ def convert_pd(data):
     }, index=['0'])
     result_df.append(df_data)
     combined_df = pd.concat(result_df)
-    # print(combined_df)
 
     return combined_df
 
 
 def write(new_list):  # 已完成
-    df = convert_pd(new_list)
-    file_path = '/Users/xyy/PycharmProjects/LeetCode_MAC/DATA/期貨未平倉DATA/DATA.txt'
-    with open(file_path, 'w', encoding='UTF-8') as file:
-        df.to_csv(file, index=False)
+    df = convert_pd(new_list)  # pandas轉換
+
+    collections = client['open_interest']['DATA']
+    data_dict = df.to_dict(orient='records')  # 轉換字典結構
+    collections.drop()  # 初始化資料集
+    collections.insert_many(data_dict)  # 寫入
 
 
 def data_dup(data):
     dealer_get, invest_get, foreign_get = data
-    file_df = pd.read_csv('/Users/xyy/PycharmProjects/LeetCode_MAC/DATA/期貨未平倉DATA/DATA.txt', encoding='utf-8')
-    foreign = file_df['foreign'][0:len(file_df) + 1].tolist()
-    invest = file_df['invest'][0:len(file_df) + 1].tolist()
-    dealer = file_df['dealer'][0:len(file_df) + 1].tolist()
+    collections = client["open_interest"]["DATA"]
+    file_data = collections.find()
+    file_df = pd.DataFrame(list(file_data))
+    foreign = file_df['foreign'].tolist()
+    invest = file_df['invest'].tolist()
+    dealer = file_df['dealer'].tolist()
     for step in range(0, len(file_df)):
         if str(foreign[step]) == foreign_get and str(invest[step]) == invest_get and str(dealer[step]) == dealer_get:
             # 資料必須轉字串，否則不到三位數資料為int
@@ -88,15 +90,13 @@ def data_dup(data):
             print(f'{datetime.now().strftime("%Y-%m-%d  %H:%M:%S")}: Duplicate')
             return False  # 重複
         else:
-            # print('True')
-            # print(type(foreign[step]), type(foreign_get))
-            # print(type(invest[step]), type(invest_get))
-            # print(type(dealer[step]), type(dealer_get))
             return True  # 不重複
 
 
 if __name__ == "__main__":
     url = "https://www.taifex.com.tw/cht/3/futContractsDate"
+    global client
+    client = pymongo.MongoClient("mongodb://localhost:27017/")
     try:
         time = (datetime.now()).strftime("%Y/%m/%d")
         data_set = get(url)
@@ -105,6 +105,8 @@ if __name__ == "__main__":
             if str(resp) == '<Response [200]>':  # 傳送成功寫入資料庫
                 write(data_set)
                 print(f'{os.path.basename(__file__)}  {datetime.now().strftime("%Y-%m-%d  %H:%M:%S")}:  {resp}')
+        client.close()
     except Exception as e:
         traceback.print_exc()
         report(__file__, traceback.format_exc())  # 回報主控台錯誤訊息內容，會觸發Notify，請小心使用
+        client.close()

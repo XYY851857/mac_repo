@@ -9,6 +9,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime
+import pymongo
 
 
 def report(file_name, e):
@@ -71,9 +72,15 @@ def convert_pd(number, state):  # 已完成
 
 def write(number, state):  # 已完成
     df = convert_pd(number, state)
-    file_path = '/Users/xyy/PycharmProjects/LeetCode_MAC/DATA/股票抽籤DATA/DATA.txt'
-    with open(file_path, 'w', encoding='UTF-8') as file:
-        df.to_csv(file, index=False)
+
+    collections = pymongo.MongoClient("mongodb://localhost:27017/")["draw_lots"]["DATA"]
+    data_dict = df.to_dict(orient='records')
+
+    collections.update_one({},{"$set": {"$each": data_dict}}, upsert=True)
+
+    # file_path = '/Users/xyy/PycharmProjects/LeetCode_MAC/DATA/股票抽籤DATA/DATA.txt'
+    # with open(file_path, 'w', encoding='UTF-8') as file:
+    #     df.to_csv(file, index=False)
 
 
 def get(url_get):
