@@ -158,7 +158,7 @@ if __name__ == "__main__":
         data = get(url)  # 取得資料
         resp = notify(data)
         if str(resp) == '<Response [200]>':  # 傳送成功寫入資料庫
-            write(*data[:2])
+            # write(*data[:2])
             print(f'{os.path.basename(__file__)}  {datetime.now().strftime("%Y-%m-%d  %H:%M:%S")}:  {resp}')
     except Exception as e:
         traceback.print_exc()
