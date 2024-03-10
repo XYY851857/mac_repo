@@ -86,9 +86,7 @@ def write(stock_detail, total_volume, price, write_stock_id):
 
     data = {
         "_name": f'{stock_detail}',
-        # f"{(datetime.now()).strftime("%Y%m%d")}": {
-        f"{'20240308'}": {
-
+        f"{(datetime.now()).strftime("%Y%m%d")}": {
             "call": total_volume[0],
             "put": total_volume[1],
             "price": f'{float(price.replace(',', '')):.2f}'
@@ -142,7 +140,7 @@ if __name__ == "__main__":
                 id = input_id[step]
                 query = {'_id': f'{id}'}
                 check_result = collection.find_one(query)
-                if check_result and '20240308' in check_result:
+                if check_result and f'{(datetime.now()).strftime("%Y%m%d")}' in check_result:
                     abar.update(1)
                     time.sleep(0.5)
                     if step+1 == len(input_id):
@@ -166,14 +164,6 @@ if __name__ == "__main__":
                     data = twstock.realtime.get(id)
                     stock_detail = data['info']['name']
                     f"{(datetime.now()).strftime("%Y%m%d")}"
-                    # query = {'_id': f'{stock_detail}', f'{(datetime.now()).strftime("%Y%m%d")}': {'$exists': True}}
-                    # query = {'_id': f'{id}'}
-                    # # print(query)
-                    # check_result = collection.find_one(query)
-                    # if '20240308' in check_result and check_result:
-                    #     print(f'ID：{id}————PASS')
-                    #     continue
-                    # print(f"名稱： {stock_detail}———Running")
                     driver, wait = driver_start()  # driver！啟動～～
                     total_volume = get(id)
                     abar.update(1)
