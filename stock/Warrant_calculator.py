@@ -134,49 +134,46 @@ if __name__ == "__main__":
             time.sleep(1.5)
             print('Thanks for your using~~')
             break
-        with tqdm(total=len(input_id)) as abar:
-            print('Running...Checking DATABASE')
-            for step in range(len(input_id)):
-                id = input_id[step]
-                query = {'_id': f'{id}'}
-                check_result = collection.find_one(query)
-                if check_result and f'{(datetime.now()).strftime("%Y%m%d")}' in check_result:
-                    abar.update(1)
-                    time.sleep(0.5)
-                    if step+1 == len(input_id):
-                        print('STATE: Success!')
-                    continue
+        print('Running...Checking DATABASE')
+        pbar = tqdm(range(len(input_id)), desc='Processing')
+        for step in pbar:
+            id = input_id[step]
+            query = {'_id': f'{id}'}
+            check_result = collection.find_one(query)
+            pbar.update(1)
+            if check_result and f'{(datetime.now()).strftime("%Y%m%d")}' in check_result:
+                time.sleep(0.5)
+                if step+1 == len(input_id):
+                    print('STATE: Success!')
+                continue
 
-                print(f"ID： {id}———Updating")
-                if id.upper() == 'INDEX' or id.upper() == '$TWT':
-                    id = '$TWT'
-                    stock_detail = '台股指'
-                    print(stock_detail)
-                    driver, wait = driver_start()  # driver！啟動～～
-                    total_volume = get(id)  # GET
-                    driver.get('https://tw.stock.yahoo.com/quote/%5ETWII')
-                    price = wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="main-0-QuoteHeader-Proxy"]/div/div[2]/div[1]/div/span[1]'))).text
-                    write_stock_id = id
-                    driver.close()
-                    abar.update(1)
-                    print(price)
-                else:
-                    data = twstock.realtime.get(id)
-                    stock_detail = data['info']['name']
-                    f"{(datetime.now()).strftime("%Y%m%d")}"
-                    driver, wait = driver_start()  # driver！啟動～～
-                    total_volume = get(id)
-                    abar.update(1)
-                    price = f'{float(data['realtime']['latest_trade_price'])}'
-                    write_stock_id = id
-                    driver.close()
+            print(f"ID： {id}———Updating")
+            if id.upper() == 'INDEX' or id.upper() == '$TWT':
+                id = '$TWT'
+                stock_detail = '台股指'
+                print(stock_detail)
+                driver, wait = driver_start()  # driver！啟動～～
+                total_volume = get(id)  # GET
+                driver.get('https://tw.stock.yahoo.com/quote/%5ETWII')
+                price = wait.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="main-0-QuoteHeader-Proxy"]/div/div[2]/div[1]/div/span[1]'))).text
+                write_stock_id = id
+                driver.close()
+                print(price)
+            else:
+                data = twstock.realtime.get(id)
+                stock_detail = data['info']['name']
+                f"{(datetime.now()).strftime("%Y%m%d")}"
+                driver, wait = driver_start()  # driver！啟動～～
+                total_volume = get(id)
+                price = f'{float(data['realtime']['latest_trade_price'])}'
+                write_stock_id = id
+                driver.close()
 
-                if total_volume == "NONE":  # 非台股或無權證則進else，執行完再判斷total_volume是否為NONE
-                    abar.update(1)
-                    print("未搜尋到相關權證")
-                    continue
+            if total_volume == "NONE":  # 非台股或無權證則進else，執行完再判斷total_volume是否為NONE
+                print("未搜尋到相關權證")
+                continue
 
-                print(
-                    f'股票名稱：{stock_detail} {id}\n收盤價：{float(price.replace(',', '')):.2f}\n購：{total_volume[0]}\n售：{total_volume[1]}')
-                write(stock_detail, total_volume, price, write_stock_id)  # 寫入資料庫
-                # break
+            print(
+                f'股票名稱：{stock_detail} {id}\n收盤價：{float(price.replace(',', '')):.2f}\n購：{total_volume[0]}\n售：{total_volume[1]}')
+            write(stock_detail, total_volume, price, write_stock_id)  # 寫入資料庫
+            # break

@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 
 
+
 def report(file_name, e):
     url = "https://notify-api.line.me/api/notify"
     token = "O22XmpnxuecnSEFPJl01cKFQBhDMy7Omn1RMXjLwiiq"  # TEST token
@@ -30,19 +31,21 @@ def get(url):
 
     soup = BeautifulSoup(html.text, 'html.parser')
     num = soup.find_all('font', color='blue')
-    dealer = clean_strip(num[5].text)
-    investment_trust = clean_strip(num[11].text)
-    foreign_investment = clean_strip(num[17].text)
-    return dealer, investment_trust, foreign_investment
+    dealer = int(clean_strip(num[5].text).replace(',', ''))
+    invest = int(clean_strip(num[11].text).replace(',', ''))
+    foreign = int(clean_strip(num[17].text).replace(',', ''))
 
+    return dealer, invest, foreign
+-1522, 18, -681
 
-def notify(data_set, time):
-    dealer, investment_trust, foreign_investment = data_set
+def notify(data_set, time, db_data):
+    dealer, invest, foreign = data_set
+    foreign_db, invest_db, dealer_db = db_data
     url = "https://notify-api.line.me/api/notify"
     token = "DEd00NVq4jTeZZ8yfMMP1OoOoCkZyhy1wTq4wEWmGjG"
     # token = "tXTEUdyi4ULLp7HX7C8x6Tw6Kpwq0VIJJNywp1kX4CK"  # TEST token
     headers = {"Authorization": "Bearer " + token}
-    message = f'\n資料擷取時間：{time}\n外資{foreign_investment}\n投信{investment_trust}\n自營商{dealer}'
+    message = f'\n資料擷取時間：{time}\n外資    :{foreign:>6} ({foreign - foreign_db})\n投信    :{invest:>6} ({invest - invest_db})\n自營商:{dealer:>6} ({dealer - dealer_db})'
 
     data = {"message": message}
     resp = requests.post(url, headers=headers, data=data)
@@ -76,32 +79,36 @@ def write(new_list):  # 已完成
 
 
 def data_dup(data):
+    global db_data
     dealer_get, invest_get, foreign_get = data
     collections = client["open_interest"]["DATA"]
     file_data = collections.find()
     file_df = pd.DataFrame(list(file_data))
-    foreign = file_df['foreign'].tolist()
-    invest = file_df['invest'].tolist()
-    dealer = file_df['dealer'].tolist()
-    for step in range(0, len(file_df)):
-        if str(foreign[step]) == foreign_get and str(invest[step]) == invest_get and str(dealer[step]) == dealer_get:
-            # 資料必須轉字串，否則不到三位數資料為int
-            # 判斷資料是否已在資料庫
-            print(f'{datetime.now().strftime("%Y-%m-%d  %H:%M:%S")}: Duplicate')
-            return False  # 重複
-        else:
-            return True  # 不重複
+    foreign = file_df['foreign'][0]
+    invest = file_df['invest'][0]
+    dealer = file_df['dealer'][0]
+    db_data = [int(foreign), int(invest), int(dealer)]
+
+    if str(foreign) == str(foreign_get) and str(invest) == str(invest_get) and str(dealer) == str(dealer_get):
+        # 資料必須轉字串，否則不到三位數資料為int
+        # 判斷資料是否已在資料庫
+        print(f'{datetime.now().strftime("%Y-%m-%d  %H:%M:%S")}: Duplicate')
+        return False  # 重複
+    else:
+        return True  # 不重複
 
 
 if __name__ == "__main__":
     url = "https://www.taifex.com.tw/cht/3/futContractsDate"
     global client
+    global db_data
+    db_data = []
     client = pymongo.MongoClient("mongodb://localhost:27017/")
     try:
         time = (datetime.now()).strftime("%Y/%m/%d")
         data_set = get(url)
         if data_dup(data_set):
-            resp = notify(data_set, time)
+            resp = notify(data_set, time, db_data)
             if str(resp) == '<Response [200]>':  # 傳送成功寫入資料庫
                 write(data_set)
                 print(f'{os.path.basename(__file__)}  {datetime.now().strftime("%Y-%m-%d  %H:%M:%S")}:  {resp}')
